@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Festival</string>
+    <string name="m1">menu3</string>
+    <string name="m2">menu2</string>
+    <string name="m3">menu4</string>
+    <string name="m4">menu1</string>
+    <string name="o">ovrire</string>
+    <string name="fer">fermer</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="chek_internet">Vous n\'êtes pas connectés à Internet</string>
+    <string name="mot_de_passe">Mot de passe</string>
+    <string name="email">Email</string>
+    <string name="inscription">Inscription</string>
+    <string name="valider">Valider</string>
+    <string name="champs_obligatoir">Champ obligatoire</string>
+    <string name="email_invalide">Adresse mail invalide</string>
+    <string name="EmailOuMotDePasseInvalide">Email ou mot de passe invalide</string>
+    <string name="nom">Nom</string>
+    <string name="t_l">Tél</string>
+    <string name="prenom">Prenom</string>
+    <string name="confirm_mot_de_passe">Confirm Mot de passe</string>
+    <string name="login">Login</string>
+</resources>
