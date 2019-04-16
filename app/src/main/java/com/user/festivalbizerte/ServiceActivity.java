@@ -145,21 +145,21 @@ public class ServiceActivity extends AppCompatActivity implements NavigationView
 
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.menu1:
+            case R.id.programme:
 
                 Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
 
                 break;
-            case R.id.menu2:
+            case R.id.service:
                 Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
 
 
                 break;
-            case R.id.menu3:
+            case R.id.Sponsor:
                 Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
 
                 break;
-            case R.id.menu4:
+            case R.id.Quiz:
                 Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
 
                 break;

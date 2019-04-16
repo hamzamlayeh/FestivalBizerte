@@ -30,10 +30,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.user.festivalbizerte.Adapter.ArtistesAdapter;
 import com.user.festivalbizerte.Model.ArtistesItem;
+import com.user.festivalbizerte.Utils.Helpers;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
@@ -42,14 +44,21 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 import static com.user.festivalbizerte.InviteAmisActivity.MY_PERMISSIONS_REQUEST;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+
+    Context context;
+    @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.news_rv)
     RecyclerView NewsRecyclerview;
+    @BindView(R.id.webview)
+    WebView webView;
     ArtistesAdapter newsAdapter;
     List<ArtistesItem> mData;
-    WebView webView;
     private GoogleMap mMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,19 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-        SupportMapFragment mapfrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        String Url="<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/x8AfdXvBOtc\" frameborder=\"0\" allowfullscreen></iframe>";
-
-        webView= findViewById(R.id.webview);
-        drawerLayout = findViewById(R.id.drawerLayout);
-        toolbar=findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,R.string.drawer_open, R.string.drawer_close);
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-//        ***init font***
+        context = this;
         ViewPump.init(ViewPump.builder()
                 .addInterceptor(new CalligraphyInterceptor(
                         new CalligraphyConfig.Builder()
@@ -77,7 +74,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 .setFontAttrId(R.attr.fontPath)
                                 .build()))
                 .build());
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
+        SupportMapFragment mapfrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        String Url = "<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/x8AfdXvBOtc\" frameborder=\"0\" allowfullscreen></iframe>";
+
+        setSupportActionBar(toolbar);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        NavigationView navigationView = findViewById(R.id.navigation);
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -86,37 +92,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
 
-
-        NewsRecyclerview = findViewById(R.id.news_rv);
         mData = new ArrayList<>();
 
-        mData.add(new ArtistesItem("15 ","Dimanche","khale hizawi"));
-        mData.add(new ArtistesItem("15 ","Dimanche","khale hizawi"));
-        mData.add(new ArtistesItem("15 ","Dimanche","khale hizawi"));
+        mData.add(new ArtistesItem("15 ", "Dimanche", "khale hizawi"));
+        mData.add(new ArtistesItem("15 ", "Dimanche", "khale hizawi"));
+        mData.add(new ArtistesItem("15 ", "Dimanche", "khale hizawi"));
 
         // adapter ini and setup
 
-        newsAdapter = new ArtistesAdapter(this,mData);
+        newsAdapter = new ArtistesAdapter(this, mData);
         NewsRecyclerview.setAdapter(newsAdapter);
         NewsRecyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext(),
                 LinearLayoutManager.HORIZONTAL, false));
 
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebChromeClient(new WebChromeClient() {
-        } );
-        webView.loadData(Url,"text/html","utf-8");
+        });
+        webView.loadData(Url, "text/html", "utf-8");
 
         mapfrag.getMapAsync(this);
 
     }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (actionBarDrawerToggle.onOptionsItemSelected(item)){
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -126,31 +132,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.menu1:
-
-                startActivity(new Intent(this,LoginActivity.class));
-
+            case R.id.programme:
+                startActivity(new Intent(context, ProgrameActivity.class));
                 break;
-            case R.id.menu2:
-                startActivity(new Intent(this,ProgrameActivity.class));
-
-
+            case R.id.service:
+                startActivity(new Intent(context, ServiceActivity.class));
                 break;
-            case R.id.menu3:
-                startActivity(new Intent(this,InviteAmisActivity.class));
-
+            case R.id.Sponsor:
+                startActivity(new Intent(context, ServiceActivity.class));
                 break;
-            case R.id.menu4:
-                startActivity(new Intent(this,ServiceActivity.class));
-
+            case R.id.Quiz:
+                startActivity(new Intent(context, ServiceActivity.class));
                 break;
             case R.id.Profile:
-                startActivity(new Intent(this,ProfikeActivity.class));
-
+                startActivity(new Intent(context, ProfikeActivity.class));
+                break;
+            case R.id.Deconnexion:
+                //startActivity(new Intent(this, LoginActivity.class));
                 break;
         }
         return false;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

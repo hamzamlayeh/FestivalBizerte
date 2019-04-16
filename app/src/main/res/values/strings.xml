@@ -24,4 +24,10 @@
     <string name="prenom">Prenom</string>
     <string name="confirm_mot_de_passe">Confirm Mot de passe</string>
     <string name="login">Login</string>
+    <string name="parametre">Parametre</string>
+    <string name="visiter_siteweb">Visiter SiteWeb</string>
+    <string name="festival_bizerte">Festival Bizerte</string>
+    <string name="les_artistes">Les Artistes</string>
+    <string name="propos_du_festival">À propos du Festival</string>
+    <string name="mapfestival">MapFestival</string>
 </resources>

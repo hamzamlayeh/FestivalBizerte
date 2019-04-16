@@ -36,7 +36,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="8dp"
-                android:text="Festival Bizerte"
+                android:text="@string/festival_bizerte"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -124,14 +124,14 @@
                         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
                     <Button
-                        android:id="@+id/button2"
+                        android:id="@+id/siteweb"
                         android:layout_width="130dp"
                         android:layout_height="42dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/transparent_bg_bordered_button"
-                        android:text="Visiter SiteWeb"
+                        android:text="@string/visiter_siteweb"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -151,7 +151,7 @@
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/button2" />
+                        app:layout_constraintTop_toBottomOf="@+id/siteweb" />
 
                     <Button
                         android:id="@+id/button4"
@@ -165,10 +165,10 @@
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/button2" />
+                        app:layout_constraintTop_toBottomOf="@+id/siteweb" />
 
                     <ImageView
-                        android:id="@+id/imageView3"
+                        android:id="@+id/fb"
                         android:layout_width="35dp"
                         android:layout_height="43dp"
                         android:layout_marginStart="8dp"
@@ -176,7 +176,7 @@
                         android:layout_marginEnd="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/button2"
+                        app:layout_constraintTop_toBottomOf="@+id/siteweb"
                         app:srcCompat="@drawable/ic_facebook"
                         tools:ignore="VectorDrawableCompat" />
 
@@ -190,7 +190,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+                        app:layout_constraintTop_toBottomOf="@+id/fb" />
 
                     <View
                         android:id="@+id/view5"
@@ -202,7 +202,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+                        app:layout_constraintTop_toBottomOf="@+id/fb" />
 
                     <View
                         android:id="@+id/view4"
@@ -222,7 +222,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="14dp"
-                        android:text="Les Artistes"
+                        android:text="@string/les_artistes"
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         app:layout_constraintStart_toStartOf="parent"
@@ -259,7 +259,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="511dp"
-                        android:text="À propos du Festival"
+                        android:text="@string/propos_du_festival"
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -268,7 +268,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/view4" />
 
                     <TextView
-                        android:id="@+id/textView7"
+                        android:id="@+id/description"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="18dp"
@@ -288,7 +288,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="32dp"
-                        android:text="MapFestival "
+                        android:text="@string/mapfestival"
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         app:layout_constraintStart_toStartOf="parent"

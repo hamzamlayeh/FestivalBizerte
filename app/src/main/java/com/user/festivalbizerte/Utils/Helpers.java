@@ -17,4 +17,5 @@ public class Helpers {
     public static void ShowMessageConnection(Context context) {
         Toast.makeText(context, R.string.chek_internet, Toast.LENGTH_SHORT).show();
     }
+
 }

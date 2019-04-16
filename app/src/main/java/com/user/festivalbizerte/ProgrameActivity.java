@@ -25,6 +25,8 @@ import com.user.festivalbizerte.Model.ProgrameItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindString;
+import butterknife.BindView;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
@@ -37,8 +39,10 @@ public class ProgrameActivity extends AppCompatActivity implements NavigationVie
     ConstraintLayout rootLayout;
     EditText searchInput ;
     CharSequence search="";
+    @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
     Context context;
     @Override
@@ -48,9 +52,15 @@ public class ProgrameActivity extends AppCompatActivity implements NavigationVie
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_programe);
-        // ini view
+        ViewPump.init(ViewPump.builder()
+                .addInterceptor(new CalligraphyInterceptor(
+                        new CalligraphyConfig.Builder()
+                                .setDefaultFontPath("font/raleway_light.ttf")
+                                .setFontAttrId(R.attr.fontPath)
+                                .build()))
+                .build());
+
         context=this;
-        drawerLayout = findViewById(R.id.drawerLayout);
         toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,R.string.drawer_open, R.string.drawer_close);
@@ -69,13 +79,6 @@ public class ProgrameActivity extends AppCompatActivity implements NavigationVie
         NewsRecyclerview = findViewById(R.id.news_rv);
         mData = new ArrayList<>();
 
-        // load theme state
-
-
-
-        // fill list news with data
-        // just for testing purpose i will fill the news list with random data
-        // you may get your data from an api / firebase or sqlite database ...
         mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
         mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
         mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
@@ -99,17 +102,6 @@ public class ProgrameActivity extends AppCompatActivity implements NavigationVie
         newsAdapter = new ProgrameAdapter(this,mData);
         NewsRecyclerview.setAdapter(newsAdapter);
         NewsRecyclerview.setLayoutManager(new LinearLayoutManager(this));
-
-
-
-//        ***init font***
-        ViewPump.init(ViewPump.builder()
-                .addInterceptor(new CalligraphyInterceptor(
-                        new CalligraphyConfig.Builder()
-                                .setDefaultFontPath("font/raleway_light.ttf")
-                                .setFontAttrId(R.attr.fontPath)
-                                .build()))
-                .build());
 
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -154,21 +146,21 @@ public class ProgrameActivity extends AppCompatActivity implements NavigationVie
 
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.menu1:
+            case R.id.programme:
 
                 Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
 
                 break;
-            case R.id.menu2:
+            case R.id.service:
                 Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
 
 
                 break;
-            case R.id.menu3:
+            case R.id.Sponsor:
                 Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
 
                 break;
-            case R.id.menu4:
+            case R.id.Quiz:
                 Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
 
                 break;
