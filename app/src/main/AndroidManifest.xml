@@ -27,7 +27,7 @@
         <activity android:name=".ServiceActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".ProgrameActivity" />
-        <activity android:name=".ProfikeActivity" />
+        <activity android:name=".ProfileActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".InviteAmisActivity" />
         <activity android:name=".LoginActivity" />

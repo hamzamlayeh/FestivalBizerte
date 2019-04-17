@@ -66,7 +66,6 @@ public class LoginActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkFineLocationPermission();
         }
-
     }
 
     @Override

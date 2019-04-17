@@ -1,9 +1,5 @@
 package com.user.festivalbizerte.Model;
 
-/**
- * Created by user on 02/10/2018.
- */
-
 public class ArtistesItem {
     private String jourNum;
     private String image;

@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Festival</string>
+    <string name="internal_storage">Internal storage</string>
     <string name="m1">menu3</string>
     <string name="m2">menu2</string>
     <string name="m3">menu4</string>
@@ -30,4 +31,6 @@
     <string name="les_artistes">Les Artistes</string>
     <string name="propos_du_festival">À propos du Festival</string>
     <string name="mapfestival">MapFestival</string>
+    <string name="votre_score">Votre Score</string>
+    <string name="modifer">Modifer</string>
 </resources>

@@ -342,7 +342,7 @@
             android:id="@+id/Email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="130dp"
             android:text="khaledhizawi@gmail.com"
             android:textColor="@color/white"

@@ -27,6 +27,7 @@ import java.util.List;
 
 import butterknife.BindString;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
@@ -52,6 +53,7 @@ public class ProgrameActivity extends AppCompatActivity implements NavigationVie
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_programe);
+        ButterKnife.bind(this);
         ViewPump.init(ViewPump.builder()
                 .addInterceptor(new CalligraphyInterceptor(
                         new CalligraphyConfig.Builder()
@@ -59,7 +61,6 @@ public class ProgrameActivity extends AppCompatActivity implements NavigationVie
                                 .setFontAttrId(R.attr.fontPath)
                                 .build()))
                 .build());
-
         context=this;
         toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

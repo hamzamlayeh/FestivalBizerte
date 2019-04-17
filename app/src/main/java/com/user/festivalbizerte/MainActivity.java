@@ -21,6 +21,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
@@ -44,19 +47,20 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 import static com.user.festivalbizerte.InviteAmisActivity.MY_PERMISSIONS_REQUEST;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
-
     Context context;
     @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
-    ActionBarDrawerToggle actionBarDrawerToggle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.news_rv)
     RecyclerView NewsRecyclerview;
     @BindView(R.id.webview)
     WebView webView;
+    @BindView(R.id.description)
+    TextView Description;
+    ActionBarDrawerToggle actionBarDrawerToggle;
     ArtistesAdapter newsAdapter;
-    List<ArtistesItem> mData;
+    List<ArtistesItem> ListArtiste = new ArrayList<>();
     private GoogleMap mMap;
 
     @Override
@@ -66,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         context = this;
         ViewPump.init(ViewPump.builder()
                 .addInterceptor(new CalligraphyInterceptor(
@@ -90,20 +95,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkFineLocationPermission();
         }
-
-
-        mData = new ArrayList<>();
-
-        mData.add(new ArtistesItem("15 ", "Dimanche", "khale hizawi"));
-        mData.add(new ArtistesItem("15 ", "Dimanche", "khale hizawi"));
-        mData.add(new ArtistesItem("15 ", "Dimanche", "khale hizawi"));
-
-        // adapter ini and setup
-
-        newsAdapter = new ArtistesAdapter(this, mData);
-        NewsRecyclerview.setAdapter(newsAdapter);
-        NewsRecyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext(),
-                LinearLayoutManager.HORIZONTAL, false));
+        if (Helpers.isConnected(context)) {
+            GetArtiste();
+        } else {
+            Helpers.ShowMessageConnection(context);
+        }
 
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebChromeClient(new WebChromeClient() {
@@ -112,6 +108,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mapfrag.getMapAsync(this);
 
+    }
+
+    private void GetArtiste() {
+        ListArtiste.add(new ArtistesItem("15 ", "Dimanche", "khale hizawi"));
+        ListArtiste.add(new ArtistesItem("15 ", "Dimanche", "khale hizawi"));
+        ListArtiste.add(new ArtistesItem("15 ", "Dimanche", "khale hizawi"));
+
+        // adapter ini and setup
+        newsAdapter = new ArtistesAdapter(context, ListArtiste);
+        NewsRecyclerview.setAdapter(newsAdapter);
+        NewsRecyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext(),
+                LinearLayoutManager.HORIZONTAL, false));
     }
 
     @Override
@@ -145,10 +153,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(context, ServiceActivity.class));
                 break;
             case R.id.Profile:
-                startActivity(new Intent(context, ProfikeActivity.class));
+                startActivity(new Intent(context, ProfileActivity.class));
                 break;
             case R.id.Deconnexion:
-                //startActivity(new Intent(this, LoginActivity.class));
+                startActivity(new Intent(context, LoginActivity.class));
+                finishAffinity();
                 break;
         }
         return false;
@@ -185,7 +194,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         // Add a marker in Sydney, Australia, and move the camera.
         LatLng sydney = new LatLng(37.280428, 9.871297);
         googleMap.getUiSettings().setZoomGesturesEnabled(true);
@@ -196,4 +204,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, zoomLevel));
     }
 
+    @OnClick(R.id.webview)
+    public void GoSiteWeb() {
+
+    }
+
+    @OnClick(R.id.fb)
+    public void GoFb() {
+
+    }
 }
