@@ -3,6 +3,7 @@ package com.user.festivalbizerte;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
@@ -33,48 +34,45 @@ import com.user.festivalbizerte.Adapter.ContactTelAdapter;
 import com.user.festivalbizerte.Helper.RecyclerViewClickListener;
 import com.user.festivalbizerte.Helper.RecyclerViewTouchListener;
 import com.user.festivalbizerte.Model.ContactTelItem;
+import com.user.festivalbizerte.Utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
-public class InviteAmisActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-    final static int MY_PERMISSIONS_REQUEST = 2;
+public class InviteAmisActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    //final static int MY_PERMISSIONS_REQUEST = 2;
+    @BindView(R.id.news_rv)
     RecyclerView NewsRecyclerview;
-    ContactTelAdapter newsAdapter;
-    List<ContactTelItem> mData;
-    ConstraintLayout rootLayout;
-    EditText searchInput ;
-    CharSequence search="";
+    @BindView(R.id.search_input)
+    EditText searchInput;
+    @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
-    ActionBarDrawerToggle actionBarDrawerToggle;
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
+    ActionBarDrawerToggle actionBarDrawerToggle;
+    ContactTelAdapter newsAdapter;
+    List<ContactTelItem> ListRepertoire = new ArrayList<>();
+    CharSequence search = "";
     Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_invite_amis);
-        context=this;
-
-        drawerLayout = findViewById(R.id.drawerLayout);
-        toolbar=findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,R.string.drawer_open, R.string.drawer_close);
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-//        ***init font***
+        ButterKnife.bind(this);
         ViewPump.init(ViewPump.builder()
                 .addInterceptor(new CalligraphyInterceptor(
                         new CalligraphyConfig.Builder()
@@ -82,17 +80,17 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
                                 .setFontAttrId(R.attr.fontPath)
                                 .build()))
                 .build());
+        context = this;
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
+        setSupportActionBar(toolbar);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        NavigationView navigationView = findViewById(R.id.navigation);
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener((NavigationView.OnNavigationItemSelectedListener) context);
-
-
-        rootLayout = findViewById(R.id.root_layout);
-        searchInput = findViewById(R.id.search_input);
-        NewsRecyclerview = findViewById(R.id.news_rv);
-        mData = new ArrayList<>();
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkSMSPermission();
@@ -101,7 +99,7 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
         recupContact();
         // adapter ini and setup
 
-        newsAdapter = new ContactTelAdapter(this,mData);
+        newsAdapter = new ContactTelAdapter(this, ListRepertoire);
         NewsRecyclerview.setAdapter(newsAdapter);
         NewsRecyclerview.setLayoutManager(new LinearLayoutManager(this));
 
@@ -109,16 +107,16 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onClick(View view, int position) {
 
-                String nom =mData.get(position).getName();
-                String num =mData.get(position).getDesc();
+                String nom = ListRepertoire.get(position).getName();
+                String num = ListRepertoire.get(position).getDesc();
                 String msg = "Lien de l aplication";
                 try {
                     SmsManager sms = SmsManager.getDefault();
 //                    sms.sendTextMessage(num, null, msg, null, null);
-                }catch (Exception e){
+                } catch (Exception e) {
                     Toast.makeText(InviteAmisActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(InviteAmisActivity.this, "Invitation  envoiye par SMS a :"+nom+" \nNuméro :"+ num, Toast.LENGTH_SHORT).show();
+                Toast.makeText(InviteAmisActivity.this, "Invitation  envoiye par SMS a :" + nom + " \nNuméro :" + num, Toast.LENGTH_SHORT).show();
             }
 
 
@@ -127,7 +125,6 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
 
             }
         }));
-
 
 
         searchInput.addTextChangedListener(new TextWatcher() {
@@ -139,10 +136,8 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-
                 newsAdapter.getFilter().filter(s);
                 search = s;
-
 
             }
 
@@ -153,14 +148,13 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
         });
 
 
-
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (actionBarDrawerToggle.onOptionsItemSelected(item)){
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -171,22 +165,29 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.programme:
-
-                Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
-
+                startActivity(new Intent(context, ProgrameActivity.class));
                 break;
             case R.id.service:
-                Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
-
-
+                startActivity(new Intent(context, ServiceActivity.class));
                 break;
             case R.id.Sponsor:
-                Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
-
+                startActivity(new Intent(context, ServiceActivity.class));
                 break;
             case R.id.Quiz:
-                Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
-
+                startActivity(new Intent(context, ServiceActivity.class));
+                break;
+            case R.id.addamis:
+                startActivity(new Intent(context, InviteAmisActivity.class));
+                break;
+            case R.id.info:
+                startActivity(new Intent(context, ServiceActivity.class));
+                break;
+            case R.id.Profile:
+                startActivity(new Intent(context, ProfileActivity.class));
+                break;
+            case R.id.Deconnexion:
+                startActivity(new Intent(context, LoginActivity.class));
+                finishAffinity();
                 break;
         }
         return false;
@@ -194,7 +195,6 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
 
     public void recupContact() {
         ContentResolver contentProvider = this.getContentResolver();
-
         Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                 new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_ALTERNATIVE,
                         ContactsContract.CommonDataKinds.Phone.NUMBER}, null, null, null);
@@ -205,8 +205,8 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
 
                 String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_ALTERNATIVE));
                 String num = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                mData.add(new ContactTelItem(name, num));
-                Collections.sort(mData, new Comparator<ContactTelItem>() {
+                ListRepertoire.add(new ContactTelItem(name, num));
+                Collections.sort(ListRepertoire, new Comparator<ContactTelItem>() {
                     @Override
                     public int compare(ContactTelItem o1, ContactTelItem o2) {
                         return o1.getName().compareTo(o2.getName());
@@ -216,16 +216,17 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
             cursor.close();
         }
     }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST:
+            case Constants.MY_PERMISSIONS_REQUEST:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 } else {
                     requestPermissions(new String[]{Manifest.permission.READ_CONTACTS,
-                            Manifest.permission.SEND_SMS}, MY_PERMISSIONS_REQUEST);
+                            Manifest.permission.SEND_SMS}, Constants.MY_PERMISSIONS_REQUEST);
                 }
                 break;
             default:
@@ -240,7 +241,7 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
                 Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
 
             requestPermissions(new String[]{Manifest.permission.SEND_SMS,
-                    Manifest.permission.SEND_SMS}, MY_PERMISSIONS_REQUEST);
+                    Manifest.permission.SEND_SMS}, Constants.MY_PERMISSIONS_REQUEST);
 
         }
     }

@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.user.festivalbizerte.Model.RSResponse;
 import com.user.festivalbizerte.Model.User;
 import com.user.festivalbizerte.Model.UserInfos;
+import com.user.festivalbizerte.Utils.Constants;
 import com.user.festivalbizerte.Utils.Helpers;
 import com.user.festivalbizerte.WebService.WebService;
 
@@ -34,8 +35,6 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.user.festivalbizerte.InviteAmisActivity.MY_PERMISSIONS_REQUEST;
 
 public class LoginActivity extends AppCompatActivity {
     Context context;
@@ -136,11 +135,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST:
+            case Constants.MY_PERMISSIONS_REQUEST:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 } else {
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_REQUEST);
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, Constants.MY_PERMISSIONS_REQUEST);
                 }
                 break;
             default:
@@ -154,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_REQUEST);
+                    Manifest.permission.ACCESS_COARSE_LOCATION}, Constants.MY_PERMISSIONS_REQUEST);
         }
     }
 }

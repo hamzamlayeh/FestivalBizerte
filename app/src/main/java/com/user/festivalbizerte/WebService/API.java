@@ -8,6 +8,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -21,7 +22,7 @@ public interface API {
     @POST("Login.php")
     Call<RSResponse> loginUser(@Body User user);
 
-    //***********************Inscription*******************
+    //Inscription
     @Multipart
     @POST("Inscription.php")
     Call<RSResponse> inscrireUser(
@@ -32,4 +33,13 @@ public interface API {
             @Part("email") RequestBody email,
             @Part("password") RequestBody password
     );
+
+    //Artiste
+    @GET("Inscription.php")
+    Call<RSResponse> loadArtiste();
+
+    //Programme
+    @GET("Inscription.php")
+    Call<RSResponse> loadProgramme();
+
 }

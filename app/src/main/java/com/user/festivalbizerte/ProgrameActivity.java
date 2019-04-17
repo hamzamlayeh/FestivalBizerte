@@ -1,6 +1,7 @@
 package com.user.festivalbizerte;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
@@ -34,17 +35,19 @@ import io.github.inflationx.viewpump.ViewPump;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 public class ProgrameActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+
+    @BindView(R.id.news_rv)
     RecyclerView NewsRecyclerview;
-    ProgrameAdapter newsAdapter;
-    List<ProgrameItem> mData;
-    ConstraintLayout rootLayout;
+    @BindView(R.id.search_input)
     EditText searchInput ;
-    CharSequence search="";
     @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
-    ActionBarDrawerToggle actionBarDrawerToggle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    ActionBarDrawerToggle actionBarDrawerToggle;
+    ProgrameAdapter newsAdapter;
+    List<ProgrameItem> mData= new ArrayList<>();
+    CharSequence search="";
     Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,23 +65,15 @@ public class ProgrameActivity extends AppCompatActivity implements NavigationVie
                                 .build()))
                 .build());
         context=this;
-        toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
+        NavigationView navigationView = findViewById(R.id.navigation);
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener((NavigationView.OnNavigationItemSelectedListener) context);
-
-
-        rootLayout = findViewById(R.id.root_layout);
-        searchInput = findViewById(R.id.search_input);
-        NewsRecyclerview = findViewById(R.id.news_rv);
-        mData = new ArrayList<>();
 
         mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
         mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
@@ -113,10 +108,8 @@ public class ProgrameActivity extends AppCompatActivity implements NavigationVie
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-
                 newsAdapter.getFilter().filter(s);
                 search = s;
-
 
             }
 
@@ -125,8 +118,6 @@ public class ProgrameActivity extends AppCompatActivity implements NavigationVie
 
             }
         });
-
-
 
     }
 
@@ -141,29 +132,34 @@ public class ProgrameActivity extends AppCompatActivity implements NavigationVie
             return true;
         }
         return super.onOptionsItemSelected(item);
-
     }
-
 
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.programme:
-
-                Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
-
+                startActivity(new Intent(context, ProgrameActivity.class));
                 break;
             case R.id.service:
-                Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
-
-
+                startActivity(new Intent(context, ServiceActivity.class));
                 break;
             case R.id.Sponsor:
-                Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
-
+                startActivity(new Intent(context, ServiceActivity.class));
                 break;
             case R.id.Quiz:
-                Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
-
+                startActivity(new Intent(context, ServiceActivity.class));
+                break;
+            case R.id.addamis:
+                startActivity(new Intent(context, InviteAmisActivity.class));
+                break;
+            case R.id.info:
+                startActivity(new Intent(context, ServiceActivity.class));
+                break;
+            case R.id.Profile:
+                startActivity(new Intent(context, ProfileActivity.class));
+                break;
+            case R.id.Deconnexion:
+                startActivity(new Intent(context, LoginActivity.class));
+                finishAffinity();
                 break;
         }
         return false;

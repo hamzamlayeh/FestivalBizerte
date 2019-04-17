@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.user.festivalbizerte.Adapter.ArtistesAdapter;
 import com.user.festivalbizerte.Model.ArtistesItem;
+import com.user.festivalbizerte.Utils.Constants;
 import com.user.festivalbizerte.Utils.Helpers;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
-import static com.user.festivalbizerte.InviteAmisActivity.MY_PERMISSIONS_REQUEST;
+import static com.user.festivalbizerte.Utils.Constants.MY_PERMISSIONS_REQUEST;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
     Context context;
@@ -152,6 +153,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.Quiz:
                 startActivity(new Intent(context, ServiceActivity.class));
                 break;
+            case R.id.addamis:
+                startActivity(new Intent(context, InviteAmisActivity.class));
+                break;
+            case R.id.info:
+                startActivity(new Intent(context, ServiceActivity.class));
+                break;
             case R.id.Profile:
                 startActivity(new Intent(context, ProfileActivity.class));
                 break;
@@ -167,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST:
+            case Constants.MY_PERMISSIONS_REQUEST:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 } else {

@@ -51,11 +51,11 @@ public class ProfileActivity extends AppCompatActivity {
         userInfos = new Gson().fromJson(pref.getString("User", null), UserInfos.class);
         if (userInfos != null) {
             setUser(userInfos);
-            Log.i("nom", userInfos.getNom());
-            Log.i("prenom", userInfos.getPrenom());
-            Log.i("email", userInfos.getEmail());
-            Log.i("tel", userInfos.getTel());
-            Log.i("tel", userInfos.getPhoto());
+//            Log.i("nom", userInfos.getNom());
+//            Log.i("prenom", userInfos.getPrenom());
+//            Log.i("email", userInfos.getEmail());
+//            Log.i("tel", userInfos.getTel());
+//            Log.i("tel", userInfos.getPhoto());
         }
 
     }

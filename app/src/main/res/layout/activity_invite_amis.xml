@@ -34,10 +34,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="64dp"
             android:background="@drawable/search_input_style"
-            android:drawableLeft="@drawable/ic_search_gray_24dp"
+            android:drawableStart="@drawable/ic_search_gray_24dp"
             android:drawablePadding="8dp"
             android:ems="10"
-            android:hint="search"
+            android:hint="@string/chercher"
             android:inputType="textPersonName"
             android:textColor="@color/content_text_color"
             app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +64,8 @@
 
     <android.support.v7.widget.ContentFrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/transparent_bg_bordered">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
