@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             checkFineLocationPermission();
         }
         if (Helpers.isConnected(context)) {
-            GetArtiste();
+            GetArtistes();
         } else {
             Helpers.ShowMessageConnection(context);
         }
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void GetArtiste() {
+    private void GetArtistes() {
         ListArtiste.add(new ArtistesItem("15 ", "Dimanche", "khale hizawi"));
         ListArtiste.add(new ArtistesItem("15 ", "Dimanche", "khale hizawi"));
         ListArtiste.add(new ArtistesItem("15 ", "Dimanche", "khale hizawi"));

@@ -35,11 +35,11 @@ public interface API {
     );
 
     //Artiste
-    @GET("Inscription.php")
+    @GET("GetAllArtiste.php")
     Call<RSResponse> loadArtiste();
 
     //Programme
-    @GET("Inscription.php")
+    @GET("GetAllProgramme.php")
     Call<RSResponse> loadProgramme();
 
 }

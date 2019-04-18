@@ -7,5 +7,5 @@ public class Artistes implements Serializable {
     private String nom;
     private String prenom;
     private String photo;
-    private String id_prog;
+    private Programmes programme;
 }
