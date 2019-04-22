@@ -115,7 +115,8 @@ public class ArtistesActivity extends AppCompatActivity implements NavigationVie
 
                         newsAdapter = new ArtisteAdapter(context, listArtiste);
                         NewsRecyclerview.setAdapter(newsAdapter);
-                        NewsRecyclerview.setLayoutManager(new GridLayoutManager(context, 2));
+                        //int valueInPixels =  getResources().getDimension(R.integer.artiste_item);
+                        NewsRecyclerview.setLayoutManager(new GridLayoutManager(context,R.integer.artiste_item));
                     } else if (response.body().getStatus() == 0) {
                         Toast.makeText(getApplicationContext(), "Pas de Produit dans le boutique", Toast.LENGTH_SHORT).show();
                     }
