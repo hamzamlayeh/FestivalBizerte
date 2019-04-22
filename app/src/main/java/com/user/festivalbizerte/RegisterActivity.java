@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,7 @@ import com.user.festivalbizerte.Utils.Constants;
 import com.user.festivalbizerte.Utils.FileCompressor;
 import com.user.festivalbizerte.Utils.FileUtils;
 import com.user.festivalbizerte.Utils.Helpers;
+import com.user.festivalbizerte.Utils.Loader;
 import com.user.festivalbizerte.WebService.WebService;
 
 import java.io.File;
@@ -66,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
     Uri imageUri = null;
     private FileCompressor mCompressor;
     private File mPhotoFile;
+    DialogFragment Loding = Loader.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
         tel = Tel.getText().toString().trim();
         if (Valider()) {
             if (Helpers.isConnected(context)) {
+                Loding.show(getSupportFragmentManager(),Constants.LODING);
                 MultipartBody.Part part = null;
                 if (imageUri != null) {
                     part = prepareFilePart(imageUri);
@@ -120,6 +124,7 @@ public class RegisterActivity extends AppCompatActivity {
                 callUpload.enqueue(new Callback<RSResponse>() {
                     @Override
                     public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
+                        Loding.dismiss();
                         if (response.body() != null) {
                             if (response.body().getStatus() == 1) {
                                 startActivity(new Intent(context, LoginActivity.class));
@@ -133,6 +138,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<RSResponse> call, Throwable t) {
+                        Loding.dismiss();
                         Log.i("err", t.getMessage());
                     }
                 });
@@ -174,6 +180,10 @@ public class RegisterActivity extends AppCompatActivity {
         }
         if (!password.isEmpty() && !confiremPassword.isEmpty() && !password.equals(confiremPassword)) {
             ConfiremPassword.setError("password n ai pas identique ");
+            valide = false;
+        }
+        if (imageUri==null) {
+            Toast.makeText(context, "Choisir une image", Toast.LENGTH_SHORT).show();
             valide = false;
         }
         return valide;

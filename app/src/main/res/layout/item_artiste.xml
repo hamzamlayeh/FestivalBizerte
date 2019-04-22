@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/imageArtiste"
         android:layout_width="0dp"
         android:layout_height="154dp"
@@ -18,8 +18,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/testjpg" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <View
         android:id="@+id/view3"
@@ -42,7 +41,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Nom d'Artiste"
         android:textColor="@color/card_bg_color"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/view3"
@@ -52,60 +50,12 @@
         app:layout_constraintTop_toTopOf="@+id/view3"
         app:layout_constraintVertical_bias="0.461" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/id_art"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginEnd="2dp"
-        android:orientation="horizontal"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view3">
-
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:background="@color/colorPrimaryDark"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="18 mares 2019"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view3" />
-
-        <TextView
-            android:id="@+id/prix2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="15dt"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.23"
-            app:layout_constraintStart_toEndOf="@+id/date"
-            app:layout_constraintTop_toBottomOf="@+id/imageArtiste" />
-
-        <TextView
-            android:id="@+id/prix1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/black"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="20dt"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@+id/imageArtiste"
-            app:layout_constraintTop_toBottomOf="@+id/imageArtiste" />
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

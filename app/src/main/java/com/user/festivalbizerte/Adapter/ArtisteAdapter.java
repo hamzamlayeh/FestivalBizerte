@@ -9,67 +9,50 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.user.festivalbizerte.Model.ArtistesItem;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.user.festivalbizerte.Model.Artistes;
 import com.user.festivalbizerte.R;
+import com.user.festivalbizerte.WebService.Urls;
 
 import java.util.List;
 
-public class ArtisteAdapter extends RecyclerView.Adapter<ArtisteAdapter.NewsViewHolder>  {
+public class ArtisteAdapter extends RecyclerView.Adapter<ArtisteAdapter.NewsViewHolder> {
 
 
     private Context mContext;
-    private List<ArtistesItem> mData ;
-    private List<ArtistesItem> List ;
+    private List<Artistes> List;
 
+    class NewsViewHolder extends RecyclerView.ViewHolder {
+        TextView NomArtiste, Id;
+        SimpleDraweeView imageArtiste;
 
+        NewsViewHolder(@NonNull View itemView) {
+            super(itemView);
+            NomArtiste = itemView.findViewById(R.id.NomArtiste);
+            Id = itemView.findViewById(R.id.id_art);
+            imageArtiste = itemView.findViewById(R.id.imageArtiste);
 
-//    public ProgrameAdapter(Context mContext, List<ProgrameItem> mData, boolean isDar) {
-//        this.mContext = mContext;
-//        this.mData = mData;
-//        this.mDataFiltered = mData;
-//    }
+        }
+    }
 
-    public ArtisteAdapter(Context mContext, List<ArtistesItem> mData) {
+    public ArtisteAdapter(Context mContext, List<Artistes> mData) {
         this.mContext = mContext;
-        this.mData = mData;
         this.List = mData;
-
     }
 
     @NonNull
     @Override
     public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-
-        View layout;
-        layout = LayoutInflater.from(mContext).inflate(R.layout.item_artiste,viewGroup,false);
+        View layout = LayoutInflater.from(mContext).inflate(R.layout.item_artiste, viewGroup, false);
         return new NewsViewHolder(layout);
     }
 
     @Override
     public void onBindViewHolder(@NonNull NewsViewHolder newsViewHolder, int position) {
 
-        // bind data here
-
-        // we apply animation to views here
-        // first lets create an animation for user photo
-//        newsViewHolder.img_user.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.fade_transition_animation));
-
-        // lets create the animation for the whole card
-        // first lets create a reference to it
-        // you ca use the previous same animation like the following
-
-        // but i want to use a different one so lets create it ..
-//        newsViewHolder.container.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.fade_scale_animation));
-
-
-        newsViewHolder.date.setText(List.get(position).getJourNum());
-        newsViewHolder.prix1.setText(List.get(position).getPrix1());
-        newsViewHolder.prix2.setText(List.get(position).getPrix2());
-        newsViewHolder.NomArtiste.setText(List.get(position).getNonArtiste());
-//        newsViewHolder.imageArtiste.setText(List.get(position).getImage());
-
-
-
+        newsViewHolder.NomArtiste.setText(List.get(position).getNom());
+        newsViewHolder.Id.setText(String.valueOf(List.get(position).getId_art()));
+        newsViewHolder.imageArtiste.setImageURI(Urls.IMAGE_ARTISTE + List.get(position).getPhoto());
 
     }
 
@@ -78,35 +61,4 @@ public class ArtisteAdapter extends RecyclerView.Adapter<ArtisteAdapter.NewsView
         return List.size();
     }
 
-
-
-    public class NewsViewHolder extends RecyclerView.ViewHolder {
-
-
-
-        TextView date,prix1,prix2,NomArtiste;
-        ImageView imageArtiste;
-
-        public NewsViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            date = itemView.findViewById(R.id.date);
-            prix1 = itemView.findViewById(R.id.prix1);
-            prix2 = itemView.findViewById(R.id.prix2);
-            NomArtiste = itemView.findViewById(R.id.NomArtiste);
-            imageArtiste = itemView.findViewById(R.id.imageArtiste);
-
-
-
-
-
-
-        }
-
-
-
-
-
-
-    }
 }

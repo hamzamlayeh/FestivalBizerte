@@ -16,4 +16,8 @@
         <item name="fontPath">assets/font/raleway_light</item>
     </style>
 
+    <!--<style name="FullScreenDialogStyle" parent="Theme.MaterialComponents.Light.DialogWhenLarge">-->
+        <!--<item name="android:statusBarColor">@color/colorPrimary</item>-->
+        <!--<item name="android:windowNoTitle">true</item>-->
+    <!--</style>-->
 </resources>

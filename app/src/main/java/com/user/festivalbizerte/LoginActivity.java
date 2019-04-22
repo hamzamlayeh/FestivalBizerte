@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.user.festivalbizerte.Model.User;
 import com.user.festivalbizerte.Model.UserInfos;
 import com.user.festivalbizerte.Utils.Constants;
 import com.user.festivalbizerte.Utils.Helpers;
+import com.user.festivalbizerte.Utils.Loader;
 import com.user.festivalbizerte.WebService.WebService;
 
 import butterknife.BindView;
@@ -45,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     String email, password;
     SharedPreferences pref;
     SharedPreferences.Editor editors;
+    DialogFragment Loding = Loader.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
+        //startActivity(new Intent(this,MainActivity.class));
         context = this;
         ButterKnife.bind(this);
         pref = getApplicationContext().getSharedPreferences("Users", MODE_PRIVATE);
@@ -83,12 +87,14 @@ public class LoginActivity extends AppCompatActivity {
         password = Password.getText().toString().trim();
         if (Valider()) {
             if (Helpers.isConnected(context)) {
+                Loding.show(getSupportFragmentManager(),Constants.LODING);
                 User user = new User(email, password);
                 Call<RSResponse> callUpload = WebService.getInstance().getApi().loginUser(user);
                 callUpload.enqueue(new Callback<RSResponse>() {
                     @Override
                     public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
                         if (response.body() != null) {
+                            Loding.dismiss();
                             if (response.body().getStatus() == 1) {
                                 UserInfos user = new Gson().fromJson(new Gson().toJson(response.body().getData()), UserInfos.class);
                                 editors = pref.edit();
@@ -105,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<RSResponse> call, Throwable t) {
+                        Loding.dismiss();
                         Log.i("err", t.getMessage());
                     }
                 });

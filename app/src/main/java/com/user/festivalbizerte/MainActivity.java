@@ -144,6 +144,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.programme:
                 startActivity(new Intent(context, ProgrameActivity.class));
                 break;
+            case R.id.artiste:
+                startActivity(new Intent(context, ArtistesActivity.class));
+                break;
             case R.id.service:
                 startActivity(new Intent(context, ServiceActivity.class));
                 break;

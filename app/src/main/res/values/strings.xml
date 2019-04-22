@@ -34,6 +34,6 @@
     <string name="votre_score">Votre Score</string>
     <string name="modifer">Modifer</string>
     <string name="chercher">Chercher</string>
-    <string name="les_artistes">Les Artistes</string>
     <string name="service_proximit">Service Proximité</string>
+    <string name="s_il_vous_pla_t_attendez">S\'il vous plaît, attendez…</string>
 </resources>

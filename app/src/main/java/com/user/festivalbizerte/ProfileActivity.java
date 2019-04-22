@@ -31,6 +31,8 @@ public class ProfileActivity extends AppCompatActivity {
     TextView Email;
     @BindView(R.id.tel)
     TextView Tel;
+    @BindView(R.id.score)
+    TextView Score;
     @BindView(R.id.img_profil)
     SimpleDraweeView photo;
     SharedPreferences pref;
@@ -51,11 +53,6 @@ public class ProfileActivity extends AppCompatActivity {
         userInfos = new Gson().fromJson(pref.getString("User", null), UserInfos.class);
         if (userInfos != null) {
             setUser(userInfos);
-//            Log.i("nom", userInfos.getNom());
-//            Log.i("prenom", userInfos.getPrenom());
-//            Log.i("email", userInfos.getEmail());
-//            Log.i("tel", userInfos.getTel());
-//            Log.i("tel", userInfos.getPhoto());
         }
 
     }
@@ -64,9 +61,10 @@ public class ProfileActivity extends AppCompatActivity {
         NomPrenom.setText(String.format("%s %s", userInfos.getNom(), userInfos.getPrenom()));
         Email.setText(userInfos.getEmail());
         Tel.setText(userInfos.getTel());
+        Score.setText(String.valueOf(userInfos.getScore_final()));
         if (userInfos.getPhoto() != null) {
-            photo.setImageURI(Urls.IMAGE_PROFIL+userInfos.getPhoto());
-        }else {
+            photo.setImageURI(Urls.IMAGE_PROFIL + userInfos.getPhoto());
+        } else {
             photo.setImageResource(R.drawable.userphoto);
         }
     }

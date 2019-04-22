@@ -10,6 +10,12 @@
             android:icon="@drawable/ic_clock"
             android:title="Programme"
             tools:ignore="HardcodedText" />
+        <item
+            android:id="@+id/artiste"
+            android:checkable="true"
+            android:icon="@drawable/ic_clock"
+            android:title="Artistes"
+            tools:ignore="HardcodedText" />
 
         <item
             android:id="@+id/service"

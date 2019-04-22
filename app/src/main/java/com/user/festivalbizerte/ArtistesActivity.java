@@ -11,14 +11,22 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.user.festivalbizerte.Adapter.ArtisteAdapter;
+import com.user.festivalbizerte.Model.Artistes;
 import com.user.festivalbizerte.Model.ArtistesItem;
+import com.user.festivalbizerte.Model.RSResponse;
+import com.user.festivalbizerte.Utils.Helpers;
+import com.user.festivalbizerte.WebService.WebService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,6 +35,9 @@ import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ArtistesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -38,7 +49,7 @@ public class ArtistesActivity extends AppCompatActivity implements NavigationVie
     Toolbar toolbar;
     ActionBarDrawerToggle actionBarDrawerToggle;
     ArtisteAdapter newsAdapter;
-    List<ArtistesItem> mData;
+    List<Artistes> listArtiste =new ArrayList<>();
     CharSequence search = "";
     Context context;
 
@@ -68,26 +79,54 @@ public class ArtistesActivity extends AppCompatActivity implements NavigationVie
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener((NavigationView.OnNavigationItemSelectedListener) context);
 
+        if (Helpers.isConnected(context)) {
+            loadArtiste();
+        } else {
+            Helpers.ShowMessageConnection(context);
+        }
 
-        mData = new ArrayList<>();
 
-        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
-        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
-        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
-        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
-        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
-        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
-        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
-        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
-        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
-        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
-        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
-        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
+//        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
+//        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
+//        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
+//        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
+//        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
+//        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
+//        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
+//        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
+//        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
+//        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
+//        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
+//        mData.add(new ArtistesItem("15 jun 2018", "khaled hizawi", "20dt", "51dt"));
 
-        newsAdapter = new ArtisteAdapter(this, mData);
-        NewsRecyclerview.setAdapter(newsAdapter);
-        NewsRecyclerview.setLayoutManager(new GridLayoutManager(this, 2));
+        ;
 
+    }
+
+    private void loadArtiste() {
+        Call<RSResponse> callUpload = WebService.getInstance().getApi().loadArtiste();
+        callUpload.enqueue(new Callback<RSResponse>() {
+            @Override
+            public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
+                if (response.body() != null) {
+                    if (response.body().getStatus() == 1) {
+                        Artistes[] tab = new Gson().fromJson(new Gson().toJson(response.body().getData()), Artistes[].class);
+                        listArtiste = Arrays.asList(tab);
+
+                        newsAdapter = new ArtisteAdapter(context, listArtiste);
+                        NewsRecyclerview.setAdapter(newsAdapter);
+                        NewsRecyclerview.setLayoutManager(new GridLayoutManager(context, 2));
+                    } else if (response.body().getStatus() == 0) {
+                        Toast.makeText(getApplicationContext(), "Pas de Produit dans le boutique", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RSResponse> call, Throwable t) {
+                Log.d("err", t.getMessage());
+            }
+        });
     }
 
     @Override

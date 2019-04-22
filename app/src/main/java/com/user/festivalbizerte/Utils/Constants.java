@@ -12,6 +12,7 @@ public class Constants {
     public static final int MAX_PHOTO_PRODUITS= 5;
 
     // Activity
+    public static final String LODING= "Loding";
     public static final String PROFIL= "Profil";
     public static final String EDITE_PROFIL= "Edite_Profil";
 }

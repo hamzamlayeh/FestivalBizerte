@@ -10,6 +10,8 @@ public class UserInfos implements Serializable {
     private String password;
     private String tel;
     private String photo;
+    private int role;
+    private int score_final;
 
     public UserInfos() {
     }
@@ -76,5 +78,21 @@ public class UserInfos implements Serializable {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
+    }
+
+    public int getScore_final() {
+        return score_final;
+    }
+
+    public void setScore_final(int score_final) {
+        this.score_final = score_final;
     }
 }
