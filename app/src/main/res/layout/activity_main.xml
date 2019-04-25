@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -321,35 +320,12 @@
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/blau"
         android:layout_gravity="start"
+        android:background="@color/blau"
         app:headerLayout="@layout/header"
         app:itemIconTint="@color/colorPrimary"
         app:itemTextColor="#fff"
-        app:menu="@menu/menu">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/ImageUser"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
-            android:layout_marginLeft="35dp"
-            android:layout_marginTop="50dp"
-            android:src="@drawable/userphoto"
-            app:civ_border_color="#FFf"
-            app:civ_border_width="2dp" />
-
-        <TextView
-            android:id="@+id/Email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="130dp"
-            android:text="khaledhizawi@gmail.com"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-    </android.support.design.widget.NavigationView>
-
+        app:menu="@menu/menu" />
 
 </android.support.v4.widget.DrawerLayout>
 

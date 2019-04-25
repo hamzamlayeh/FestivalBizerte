@@ -3,6 +3,7 @@ package com.user.festivalbizerte.Adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,138 +12,31 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.user.festivalbizerte.Model.ProgrameItem;
+import com.user.festivalbizerte.Model.Programmes;
 import com.user.festivalbizerte.R;
 
+import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class ProgrameAdapter extends RecyclerView.Adapter<ProgrameAdapter.NewsViewHolder> implements Filterable {
 
 
     private Context mContext;
-    private List<ProgrameItem> mData ;
-    private List<ProgrameItem> List ;
-
-
-
-//    public ProgrameAdapter(Context mContext, List<ProgrameItem> mData, boolean isDar) {
-//        this.mContext = mContext;
-//        this.mData = mData;
-//        this.mDataFiltered = mData;
-//    }
-
-    public ProgrameAdapter(Context mContext, List<ProgrameItem> mData) {
-        this.mContext = mContext;
-        this.mData = mData;
-        this.List = mData;
-
-    }
-
-    @NonNull
-    @Override
-    public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-
-        View layout;
-        layout = LayoutInflater.from(mContext).inflate(R.layout.item_news,viewGroup,false);
-        return new NewsViewHolder(layout);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull NewsViewHolder newsViewHolder, int position) {
-
-        // bind data here
-
-        // we apply animation to views here
-        // first lets create an animation for user photo
-//        newsViewHolder.img_user.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.fade_transition_animation));
-
-        // lets create the animation for the whole card
-        // first lets create a reference to it
-        // you ca use the previous same animation like the following
-
-        // but i want to use a different one so lets create it ..
-        newsViewHolder.container.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_scale_animation));
-
-
-
-        newsViewHolder.date_jour.setText(List.get(position).getJour());
-        newsViewHolder.date_mois.setText(List.get(position).getMois());
-        newsViewHolder.Description.setText(List.get(position).getDescription());
-        newsViewHolder.Titre.setText(List.get(position).getTitle());
-        newsViewHolder.Prix.setText(List.get(position).getPrix());
-        newsViewHolder.Horaire.setText(List.get(position).getHoraire());
-
-
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return List.size();
-    }
-
-    @Override
-    public Filter getFilter() {
-
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-
-                String Key = constraint.toString();
-                if (Key.isEmpty()) {
-
-                    List = mData ;
-
-                }
-                else {
-                    List<ProgrameItem> lstFiltered = new ArrayList<>();
-                    for (ProgrameItem row : mData) {
-
-                        if (row.getTitle().toLowerCase().contains(Key.toLowerCase())){
-                            lstFiltered.add(row);
-                        }
-
-                    }
-
-                    List = lstFiltered;
-
-                }
-
-
-                FilterResults filterResults = new FilterResults();
-                filterResults.values= List;
-                return filterResults;
-
-            }
-
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-
-
-                List = (List<ProgrameItem>) results.values;
-                notifyDataSetChanged();
-
-            }
-        };
-
-
-
-
-    }
+    private List<Programmes> mData;
+    private List<Programmes> List;
 
     public class NewsViewHolder extends RecyclerView.ViewHolder {
 
-
-
-        TextView date_jour,date_mois,Titre,Description,Horaire,Prix;
-
+        TextView date_jour, date_mois, Titre, Description, Horaire, Prix;
         LinearLayout container;
-
-
-
-
 
         public NewsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -155,16 +49,80 @@ public class ProgrameAdapter extends RecyclerView.Adapter<ProgrameAdapter.NewsVi
             Description = itemView.findViewById(R.id.Description);
             Horaire = itemView.findViewById(R.id.Horaire);
 
-
-
-
-
         }
+    }
 
+    public ProgrameAdapter(Context mContext, List<Programmes> mData) {
+        this.mContext = mContext;
+        this.mData = mData;
+        this.List = mData;
+    }
 
+    @NonNull
+    @Override
+    public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View layout;
+        layout = LayoutInflater.from(mContext).inflate(R.layout.item_news, viewGroup, false);
+        return new NewsViewHolder(layout);
+    }
 
+    @Override
+    public void onBindViewHolder(@NonNull NewsViewHolder newsViewHolder, int position) {
 
+        newsViewHolder.container.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_scale_animation));
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormatSymbols symbols = new DateFormatSymbols(Locale.FRANCE);
+        Calendar cal = Calendar.getInstance();
+        try {
+            cal.setTime(sdf.parse(List.get(position).getDate()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        newsViewHolder.date_jour.setText(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
+        newsViewHolder.date_mois.setText(String.valueOf(symbols.getMonths()[cal.get(Calendar.MONTH)]));
+        newsViewHolder.Description.setText(List.get(position).getDescription());
+        newsViewHolder.Titre.setText(List.get(position).getTitre());
+        newsViewHolder.Prix.setText(String.format("%s - %s DT", String.valueOf(List.get(position).getPrix()),
+                String.valueOf(List.get(position).getPrix2())));
+        newsViewHolder.Horaire.setText(List.get(position).getHoraire());
 
+    }
 
+    @Override
+    public int getItemCount() {
+        return List.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+
+                String Key = constraint.toString();
+                if (Key.isEmpty()) {
+                    List = mData;
+                } else {
+                    List<Programmes> lstFiltered = new ArrayList<>();
+                    for (Programmes row : mData) {
+                        if (row.getTitre().toLowerCase().contains(Key.toLowerCase())) {
+                            lstFiltered.add(row);
+                        }
+                    }
+                    List = lstFiltered;
+
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = List;
+                return filterResults;
+
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                List = (List<Programmes>) results.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 }

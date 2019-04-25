@@ -13,7 +13,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo2"
@@ -24,7 +23,8 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="n">
-
+        <activity android:name=".SponsorActivity"></activity>
+        <activity android:name=".StartQuiz" />
         <activity
             android:name=".ServiceActivity"
             android:screenOrientation="portrait" />

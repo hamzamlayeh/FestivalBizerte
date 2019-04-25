@@ -2,31 +2,25 @@ package com.user.festivalbizerte;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
+import android.widget.TextView;
 
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
-import com.user.festivalbizerte.Adapter.ArtisteAdapter;
-import com.user.festivalbizerte.Model.Artistes;
-import com.user.festivalbizerte.Model.RSResponse;
-import com.user.festivalbizerte.Utils.Helpers;
-import com.user.festivalbizerte.WebService.WebService;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.user.festivalbizerte.Model.UserInfos;
+import com.user.festivalbizerte.WebService.Urls;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,22 +28,15 @@ import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class ArtistesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    @BindView(R.id.news_rv)
-    RecyclerView NewsRecyclerview;
+public class StartQuiz extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+    Context context;
     @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     ActionBarDrawerToggle actionBarDrawerToggle;
-    ArtisteAdapter newsAdapter;
-    List<Artistes> listArtiste =new ArrayList<>();
-    Context context;
+    SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +44,7 @@ public class ArtistesActivity extends AppCompatActivity implements NavigationVie
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_artistes);
+        setContentView(R.layout.activity_start_quiz);
         ButterKnife.bind(this);
         context = this;
         ViewPump.init(ViewPump.builder()
@@ -77,37 +64,21 @@ public class ArtistesActivity extends AppCompatActivity implements NavigationVie
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener((NavigationView.OnNavigationItemSelectedListener) context);
 
-        if (Helpers.isConnected(context)) {
-            loadArtiste();
-        } else {
-            Helpers.ShowMessageConnection(context);
+        View headerView = navigationView.getHeaderView(0);
+        SimpleDraweeView imageProfile = headerView.findViewById(R.id.ImageUser);
+        TextView EmailProfile = headerView.findViewById(R.id.Email);
+
+        pref = getApplicationContext().getSharedPreferences("Users", MODE_PRIVATE);
+        UserInfos userInfos = new Gson().fromJson(pref.getString("User", null), UserInfos.class);
+        if (userInfos != null) {
+            EmailProfile.setText(userInfos.getEmail());
+//            Log.i("photo",userInfos.getPhoto());
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
+            roundingParams.setBorder(getResources().getColor(R.color.white), 2f);
+            roundingParams.setRoundAsCircle(true);
+            imageProfile.getHierarchy().setRoundingParams(roundingParams);
+            imageProfile.setImageURI(Urls.IMAGE_PROFIL + userInfos.getPhoto());
         }
-    }
-
-    private void loadArtiste() {
-        Call<RSResponse> callUpload = WebService.getInstance().getApi().loadArtiste();
-        callUpload.enqueue(new Callback<RSResponse>() {
-            @Override
-            public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
-                if (response.body() != null) {
-                    if (response.body().getStatus() == 1) {
-                        Artistes[] tab = new Gson().fromJson(new Gson().toJson(response.body().getData()), Artistes[].class);
-                        listArtiste = Arrays.asList(tab);
-
-                        newsAdapter = new ArtisteAdapter(context, listArtiste);
-                        NewsRecyclerview.setAdapter(newsAdapter);
-                        NewsRecyclerview.setLayoutManager(new GridLayoutManager(context,getResources().getInteger(R.integer.artiste_item)));
-                    } else if (response.body().getStatus() == 0) {
-                        Toast.makeText(getApplicationContext(), "Pas de Artiste ", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RSResponse> call, Throwable t) {
-                Log.d("err", t.getMessage());
-            }
-        });
     }
 
     @Override
@@ -122,9 +93,9 @@ public class ArtistesActivity extends AppCompatActivity implements NavigationVie
             return true;
         }
         return super.onOptionsItemSelected(item);
-
     }
 
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.programme:
@@ -137,7 +108,7 @@ public class ArtistesActivity extends AppCompatActivity implements NavigationVie
                 startActivity(new Intent(context, ServiceActivity.class));
                 break;
             case R.id.Quiz:
-                startActivity(new Intent(context, ServiceActivity.class));
+                startActivity(new Intent(context, StartQuiz.class));
                 break;
             case R.id.addamis:
                 startActivity(new Intent(context, InviteAmisActivity.class));
@@ -155,6 +126,4 @@ public class ArtistesActivity extends AppCompatActivity implements NavigationVie
         }
         return false;
     }
-
-
 }

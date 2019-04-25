@@ -2,53 +2,61 @@ package com.user.festivalbizerte;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.user.festivalbizerte.Adapter.ProgrameAdapter;
-import com.user.festivalbizerte.Model.ProgrameItem;
+import com.user.festivalbizerte.Model.Programmes;
+import com.user.festivalbizerte.Model.RSResponse;
+import com.user.festivalbizerte.Utils.Helpers;
+import com.user.festivalbizerte.WebService.WebService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class ProgrameActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class ProgrameActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.news_rv)
     RecyclerView NewsRecyclerview;
     @BindView(R.id.search_input)
-    EditText searchInput ;
+    EditText searchInput;
     @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     ActionBarDrawerToggle actionBarDrawerToggle;
     ProgrameAdapter newsAdapter;
-    List<ProgrameItem> mData= new ArrayList<>();
-    CharSequence search="";
+    List<Programmes> ListProgrammes = new ArrayList<>();
+    CharSequence search = "";
     Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,9 +72,9 @@ public class ProgrameActivity extends AppCompatActivity implements NavigationVie
                                 .setFontAttrId(R.attr.fontPath)
                                 .build()))
                 .build());
-        context=this;
+        context = this;
         setSupportActionBar(toolbar);
-        actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,R.string.drawer_open, R.string.drawer_close);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -75,60 +83,65 @@ public class ProgrameActivity extends AppCompatActivity implements NavigationVie
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener((NavigationView.OnNavigationItemSelectedListener) context);
 
-        mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
-        mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
-        mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
-        mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
-        mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
-        mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
-        mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
-        mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
-        mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
-        mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
-        mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
-        mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
-        mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
-        mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
-        mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
-        mData.add(new ProgrameItem("spectacle ","15D","15","Avrile","23h","la soirée internationale de la magie"));
-
-
-        // adapter ini and setup
-
-        newsAdapter = new ProgrameAdapter(this,mData);
-        NewsRecyclerview.setAdapter(newsAdapter);
-        NewsRecyclerview.setLayoutManager(new LinearLayoutManager(this));
+        if (Helpers.isConnected(context)) {
+            loadProgramme();
+        } else {
+            Helpers.ShowMessageConnection(context);
+        }
 
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
                 newsAdapter.getFilter().filter(s);
                 search = s;
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
 
+    }
+
+    private void loadProgramme() {
+        Call<RSResponse> callUpload = WebService.getInstance().getApi().loadProgramme();
+        callUpload.enqueue(new Callback<RSResponse>() {
+            @Override
+            public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
+                if (response.body() != null) {
+                    if (response.body().getStatus() == 1) {
+                        Programmes[] tab = new Gson().fromJson(new Gson().toJson(response.body().getData()), Programmes[].class);
+                        ListProgrammes = Arrays.asList(tab);
+                        newsAdapter = new ProgrameAdapter(context, ListProgrammes);
+                        NewsRecyclerview.setAdapter(newsAdapter);
+                        NewsRecyclerview.setLayoutManager(new LinearLayoutManager(context));
+
+                    } else if (response.body().getStatus() == 0) {
+                        Toast.makeText(getApplicationContext(), "Pas de Programme ", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RSResponse> call, Throwable t) {
+                Log.d("err", t.getMessage());
+            }
+        });
     }
 
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (actionBarDrawerToggle.onOptionsItemSelected(item)){
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);

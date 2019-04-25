@@ -39,14 +39,16 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/img_profil"
-                android:layout_width="140dp"
-                android:layout_height="124dp"
+                android:layout_width="137dp"
+                android:layout_height="138dp"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="32dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                fresco:actualImageScaleType="fitXY"
+                fresco:roundedCornerRadius="6dp"/>
 
             <TextView
                 android:id="@+id/nomPrenom"
@@ -66,7 +68,7 @@
                 android:layout_width="78dp"
                 android:layout_height="46dp"
                 android:onClick="retour"
-                android:paddingLeft="2dp"
+                android:paddingStart="2dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 app:layout_constraintStart_toStartOf="parent"

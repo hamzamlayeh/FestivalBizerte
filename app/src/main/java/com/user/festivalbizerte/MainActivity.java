@@ -3,6 +3,7 @@ package com.user.festivalbizerte;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -13,37 +14,57 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.core.ImagePipeline;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.user.festivalbizerte.Adapter.ArtistesAdapter;
-import com.user.festivalbizerte.Model.ArtistesItem;
+import com.user.festivalbizerte.Model.ArtisteProgramee;
+import com.user.festivalbizerte.Model.RSResponse;
+import com.user.festivalbizerte.Model.UserInfos;
 import com.user.festivalbizerte.Utils.Constants;
 import com.user.festivalbizerte.Utils.Helpers;
+import com.user.festivalbizerte.WebService.Urls;
+import com.user.festivalbizerte.WebService.WebService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.user.festivalbizerte.Utils.Constants.MY_PERMISSIONS_REQUEST;
 
@@ -59,9 +80,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     WebView webView;
     @BindView(R.id.description)
     TextView Description;
+    SharedPreferences pref;
     ActionBarDrawerToggle actionBarDrawerToggle;
     ArtistesAdapter newsAdapter;
-    List<ArtistesItem> ListArtiste = new ArrayList<>();
+    List<ArtisteProgramee> ListArtiste = new ArrayList<>();
     private GoogleMap mMap;
 
     @Override
@@ -92,10 +114,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.navigation);
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkFineLocationPermission();
         }
+        View headerView = navigationView.getHeaderView(0);
+        SimpleDraweeView imageProfile = headerView.findViewById(R.id.ImageUser);
+        TextView EmailProfile = headerView.findViewById(R.id.Email);
+
+        pref = getApplicationContext().getSharedPreferences("Users", MODE_PRIVATE);
+        UserInfos userInfos = new Gson().fromJson(pref.getString("User", null), UserInfos.class);
+        if (userInfos != null) {
+            EmailProfile.setText(userInfos.getEmail());
+//            Log.i("photo",userInfos.getPhoto());
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
+            roundingParams.setBorder(getResources().getColor(R.color.white), 2f);
+            roundingParams.setRoundAsCircle(true);
+            imageProfile.getHierarchy().setRoundingParams(roundingParams);
+            imageProfile.setImageURI(Urls.IMAGE_PROFIL + userInfos.getPhoto());
+        }
+
         if (Helpers.isConnected(context)) {
             GetArtistes();
         } else {
@@ -112,15 +149,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void GetArtistes() {
-        ListArtiste.add(new ArtistesItem("15 ", "Dimanche", "khale hizawi"));
-        ListArtiste.add(new ArtistesItem("15 ", "Dimanche", "khale hizawi"));
-        ListArtiste.add(new ArtistesItem("15 ", "Dimanche", "khale hizawi"));
+        Call<RSResponse> callUpload = WebService.getInstance().getApi().loadArtisteProgramee();
+        callUpload.enqueue(new Callback<RSResponse>() {
+            @Override
+            public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
+                if (response.body() != null) {
+                    if (response.body().getStatus() == 1) {
+                        ArtisteProgramee[] tab = new Gson().fromJson(new Gson().toJson(response.body().getData()), ArtisteProgramee[].class);
+                        ListArtiste = Arrays.asList(tab);
+                        newsAdapter = new ArtistesAdapter(context, ListArtiste);
+                        NewsRecyclerview.setAdapter(newsAdapter);
+                        NewsRecyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext(),
+                                LinearLayoutManager.HORIZONTAL, false));
+                    } else if (response.body().getStatus() == 0) {
+                        Toast.makeText(getApplicationContext(), "Pas de Programe", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
 
-        // adapter ini and setup
-        newsAdapter = new ArtistesAdapter(context, ListArtiste);
-        NewsRecyclerview.setAdapter(newsAdapter);
-        NewsRecyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext(),
-                LinearLayoutManager.HORIZONTAL, false));
+            @Override
+            public void onFailure(Call<RSResponse> call, Throwable t) {
+                Log.d("err", t.getMessage());
+            }
+        });
     }
 
     @Override
@@ -151,10 +202,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(context, ServiceActivity.class));
                 break;
             case R.id.Sponsor:
-                startActivity(new Intent(context, ServiceActivity.class));
+                startActivity(new Intent(context, SponsorActivity.class));
                 break;
             case R.id.Quiz:
-                startActivity(new Intent(context, ServiceActivity.class));
+                startActivity(new Intent(context, StartQuiz.class));
                 break;
             case R.id.addamis:
                 startActivity(new Intent(context, InviteAmisActivity.class));

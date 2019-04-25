@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -53,7 +52,6 @@ public class ArtisteAdapter extends RecyclerView.Adapter<ArtisteAdapter.NewsView
         newsViewHolder.NomArtiste.setText(List.get(position).getNom());
         newsViewHolder.Id.setText(String.valueOf(List.get(position).getId_art()));
         newsViewHolder.imageArtiste.setImageURI(Urls.IMAGE_ARTISTE + List.get(position).getPhoto());
-
     }
 
     @Override

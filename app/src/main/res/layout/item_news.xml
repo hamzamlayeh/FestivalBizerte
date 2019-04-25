@@ -61,10 +61,9 @@
                 android:id="@+id/Titre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="15dp"
+                android:paddingStart="15dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                android:text="spectacle "
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
@@ -72,30 +71,26 @@
                 android:id="@+id/Description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="15dp"
+                android:paddingStart="15dp"
                 android:textSize="12sp"
-                android:paddingRight="5dp"
+                android:paddingEnd="5dp"
                 android:paddingBottom="5dp"
-                android:text="la soirée internationale de la magie"
                 android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/Prix"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="15dp"
-                android:text="TextView"
+                android:paddingStart="15dp"
                 android:textSize="12sp"
-
                 android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/Horaire"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
+                android:layout_marginEnd="15dp"
                 android:gravity="right"
-                android:text="20h"
                 android:textColor="@color/white" />
         </LinearLayout>
     </LinearLayout>

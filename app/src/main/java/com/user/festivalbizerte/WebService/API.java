@@ -18,7 +18,7 @@ public interface API {
     @Headers({
             "Accept: application/json"
     })
-    //***********************Login*******************
+    //Login
     @POST("Login.php")
     Call<RSResponse> loginUser(@Body User user);
 
@@ -35,11 +35,17 @@ public interface API {
     );
 
     //Artiste
-    @GET("GetAllArtiste.php")
+    @GET("Artiste.php")
     Call<RSResponse> loadArtiste();
 
     //Programme
-    @GET("GetAllProgramme.php")
+    @GET("Programme.php")
     Call<RSResponse> loadProgramme();
 
+    @GET("ProgrammeArtiste.php")
+    Call<RSResponse> loadArtisteProgramee();
+
+    //Sponsor
+    @GET("Sponsor.php")
+    Call<RSResponse> loadSponsor();
 }

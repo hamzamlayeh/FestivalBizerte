@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">13.80.41.22</domain>
+        <domain includeSubdomains="true">192.168.7.138</domain>
+        <domain includeSubdomains="true">festival-env.8mfrif98e4.eu-west-2.elasticbeanstalk.com</domain>
+        <domain includeSubdomains="true">192.168.1.5</domain>
     </domain-config>
 </network-security-config>

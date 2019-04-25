@@ -3,18 +3,15 @@ package com.user.festivalbizerte.Model;
 import java.io.Serializable;
 
 public class Programmes implements Serializable {
+
     private int id_prog;
     private String titre;
+    private String description;
     private String date;
     private String horaire;
-    private String prix;
-
-    public Programmes(String titre, String date, String horaire, String prix) {
-        this.titre = titre;
-        this.date = date;
-        this.horaire = horaire;
-        this.prix = prix;
-    }
+    private int prix;
+    private int prix2;
+    private int id_fest;
 
     public int getId_prog() {
         return id_prog;
@@ -30,6 +27,14 @@ public class Programmes implements Serializable {
 
     public void setTitre(String titre) {
         this.titre = titre;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getDate() {
@@ -48,11 +53,27 @@ public class Programmes implements Serializable {
         this.horaire = horaire;
     }
 
-    public String getPrix() {
+    public int getPrix() {
         return prix;
     }
 
-    public void setPrix(String prix) {
+    public void setPrix(int prix) {
         this.prix = prix;
+    }
+
+    public int getPrix2() {
+        return prix2;
+    }
+
+    public void setPrix2(int prix2) {
+        this.prix2 = prix2;
+    }
+
+    public int getId_fest() {
+        return id_fest;
+    }
+
+    public void setId_fest(int id_fest) {
+        this.id_fest = id_fest;
     }
 }
