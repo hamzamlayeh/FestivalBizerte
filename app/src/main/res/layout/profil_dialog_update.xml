@@ -4,6 +4,7 @@
     xmlns:fresco="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog_ask_login"
     android:orientation="vertical">
 
     <LinearLayout
@@ -51,7 +52,8 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:theme="@style/LoginTextInputLayoutStyle">
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/input_nom"
@@ -67,7 +69,8 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:theme="@style/LoginTextInputLayoutStyle">
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/input_prenom"
@@ -83,7 +86,8 @@
                 android:id="@+id/input_layout_tel"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:theme="@style/LoginTextInputLayoutStyle">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/input_tel"
@@ -99,6 +103,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:theme="@style/LoginTextInputLayoutStyle"
                 app:passwordToggleEnabled="true">
 
                 <android.support.design.widget.TextInputEditText
@@ -109,6 +114,7 @@
                     android:inputType="textPassword"
                     android:textSize="14sp" />
             </android.support.design.widget.TextInputLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,11 +128,11 @@
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Annuler"
-                    android:textSize="17dp"
-                    android:textColor="#0788F5"
                     android:layout_marginEnd="5dp"
-                    android:textAllCaps="false" />
+                    android:text="Annuler"
+                    android:textAllCaps="false"
+                    android:textColor="#0788F5"
+                    android:textSize="17dp" />
 
                 <Button
                     android:id="@+id/positive_btn"
@@ -134,9 +140,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Modifier"
-                    android:textSize="17dp"
+                    android:textAllCaps="false"
                     android:textColor="#0788F5"
-                    android:textAllCaps="false"/>
+                    android:textSize="17dp" />
             </LinearLayout>
         </LinearLayout>
 

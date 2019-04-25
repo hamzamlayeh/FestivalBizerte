@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,6 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
     UserInfos userInfos;
     AlertDialog alertDialog;
     View popupInputDialogView = null;
+    TextInputEditText nomEditText;
     private FileCompressor mCompressor;
     private File mPhotoFile;
     Uri imageUri = null;
@@ -111,7 +113,8 @@ public class ProfileActivity extends AppCompatActivity {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         popupInputDialogView = layoutInflater.inflate(R.layout.profil_dialog_update, null);
 
-//        nomEditText = popupInputDialogView.findViewById(R.id.nom);
+          nomEditText = popupInputDialogView.findViewById(R.id.input_nom);
+//          nomEditText.setError("ee");
 //        prenomEditText = popupInputDialogView.findViewById(R.id.prenom);
 //        adresseEditText = popupInputDialogView.findViewById(R.id.adress);
 //        telEditText = popupInputDialogView.findViewById(R.id.tel);

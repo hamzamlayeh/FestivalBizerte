@@ -16,6 +16,26 @@
         <item name="fontPath">assets/font/raleway_light</item>
     </style>
 
+    <style name="LoginTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="colorAccent">#0788F5</item>
+
+    </style>
+
+    <!--<style name="counterText">-->
+        <!--<item name="android:textColor">#aa344955</item>-->
+    <!--</style>-->
+
+    <!--<style name="counterOverride">-->
+        <!--<item name="android:textColor">@android:color/holo_red_dark</item>-->
+    <!--</style>-->
+
+    <!--<style name="BottomNavigationView" parent="@style/TextAppearance.AppCompat.Caption">-->
+        <!--<item name="android:textSize">8sp</item>-->
+    <!--</style>-->
+
+    <!--<style name="BottomNavigationView.Active" parent="@style/TextAppearance.AppCompat.Caption">-->
+        <!--<item name="android:textSize">7sp</item>-->
+    <!--</style>-->
     <!--<style name="FullScreenDialogStyle" parent="Theme.MaterialComponents.Light.DialogWhenLarge">-->
         <!--<item name="android:statusBarColor">@color/colorPrimary</item>-->
         <!--<item name="android:windowNoTitle">true</item>-->
