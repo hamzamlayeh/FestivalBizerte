@@ -26,6 +26,7 @@ import com.user.festivalbizerte.Utils.Constants;
 import com.user.festivalbizerte.Utils.Helpers;
 import com.user.festivalbizerte.Utils.Loader;
 import com.user.festivalbizerte.WebService.WebService;
+import com.user.festivalbizerte.session.RSSession;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -96,10 +97,11 @@ public class LoginActivity extends AppCompatActivity {
                         if (response.body() != null) {
                             Loding.dismiss();
                             if (response.body().getStatus() == 1) {
-                                UserInfos user = new Gson().fromJson(new Gson().toJson(response.body().getData()), UserInfos.class);
-                                editors = pref.edit();
-                                editors.putString("User", new Gson().toJson(user));
-                                editors.apply();
+                                RSSession.saveIntoSharedPreferences(response.body().getData(),context);
+//                                UserInfos user = new Gson().fromJson(new Gson().toJson(response.body().getData()), UserInfos.class);
+//                                editors = pref.edit();
+//                                editors.putString("User", new Gson().toJson(user));
+//                                editors.apply();
                                 startActivity(new Intent(context, MainActivity.class));
                             } else if (response.body().getStatus() == 0) {
                                 Toast.makeText(context, "err", Toast.LENGTH_SHORT).show();

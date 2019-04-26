@@ -121,8 +121,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SimpleDraweeView imageProfile = headerView.findViewById(R.id.ImageUser);
         TextView EmailProfile = headerView.findViewById(R.id.Email);
 
-        pref = getApplicationContext().getSharedPreferences("Users", MODE_PRIVATE);
-        UserInfos userInfos = new Gson().fromJson(pref.getString("User", null), UserInfos.class);
+        pref = getApplicationContext().getSharedPreferences("local_storage_users", MODE_PRIVATE);
+        UserInfos userInfos = new Gson().fromJson(pref.getString("local_storage_users", null), UserInfos.class);
         if (userInfos != null) {
             EmailProfile.setText(userInfos.getEmail());
 //            Log.i("photo",userInfos.getPhoto());

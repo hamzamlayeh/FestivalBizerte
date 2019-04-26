@@ -37,4 +37,5 @@
     <string name="service_proximit">Service Proximité</string>
     <string name="s_il_vous_pla_t_attendez">S\'il vous plaît, attendez…</string>
     <string name="bienvenue">Bienvenue</string>
+    <string name="annuler">Annuler</string>
 </resources>

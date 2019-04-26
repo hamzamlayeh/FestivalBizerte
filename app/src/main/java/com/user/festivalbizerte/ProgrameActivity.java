@@ -152,14 +152,17 @@ public class ProgrameActivity extends AppCompatActivity implements NavigationVie
             case R.id.programme:
                 startActivity(new Intent(context, ProgrameActivity.class));
                 break;
+            case R.id.artiste:
+                startActivity(new Intent(context, ArtistesActivity.class));
+                break;
             case R.id.service:
                 startActivity(new Intent(context, ServiceActivity.class));
                 break;
             case R.id.Sponsor:
-                startActivity(new Intent(context, ServiceActivity.class));
+                startActivity(new Intent(context, SponsorActivity.class));
                 break;
             case R.id.Quiz:
-                startActivity(new Intent(context, ServiceActivity.class));
+                startActivity(new Intent(context, StartQuiz.class));
                 break;
             case R.id.addamis:
                 startActivity(new Intent(context, InviteAmisActivity.class));

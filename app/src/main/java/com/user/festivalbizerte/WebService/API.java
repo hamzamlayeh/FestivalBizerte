@@ -48,4 +48,16 @@ public interface API {
     //Sponsor
     @GET("Sponsor.php")
     Call<RSResponse> loadSponsor();
+
+    //User
+    @Multipart
+    @POST("UpdateUser.php")
+    Call<RSResponse> updateUser(
+            @Part MultipartBody.Part part,
+            @Part("nom") RequestBody nom,
+            @Part("prenom") RequestBody prenom,
+            @Part("tel") RequestBody tel,
+            @Part("password") RequestBody password,
+            @Part("id_user") RequestBody id_user
+    );
 }

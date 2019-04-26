@@ -275,7 +275,6 @@
                         android:layout_marginEnd="18dp"
                         android:text="Fondé par Steve Berthelotte, comédien et président de l’événement, et par Francine Bédard, le Festival des Molières a donc pris forme autour d’une tasse de café en juillet 2007. Grâce au soutien, entre autres, des Loisirs Ste-Dorothée et de conseillers municipaux"
                         android:textColor="@color/colorAccent"
-                        android:textDirection="firstStrongRtl"
                         android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
