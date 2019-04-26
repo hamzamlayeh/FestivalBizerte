@@ -24,12 +24,13 @@ import com.user.festivalbizerte.WebService.Urls;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
-public class StartQuiz extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class StartQuiz extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     Context context;
     @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
@@ -79,6 +80,11 @@ public class StartQuiz extends AppCompatActivity implements NavigationView.OnNav
             imageProfile.getHierarchy().setRoundingParams(roundingParams);
             imageProfile.setImageURI(Urls.IMAGE_PROFIL + userInfos.getPhoto());
         }
+    }
+
+    @OnClick(R.id.start)
+    public void Start() {
+
     }
 
     @Override
