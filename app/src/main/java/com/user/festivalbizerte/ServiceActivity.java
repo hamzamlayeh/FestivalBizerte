@@ -100,7 +100,6 @@ public class ServiceActivity extends AppCompatActivity implements NavigationView
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
-
             }
 
             @Override

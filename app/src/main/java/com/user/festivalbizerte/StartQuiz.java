@@ -9,18 +9,30 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
+import com.user.festivalbizerte.Adapter.ArtisteAdapter;
+import com.user.festivalbizerte.Model.Quiz;
+import com.user.festivalbizerte.Model.RSResponse;
 import com.user.festivalbizerte.Model.UserInfos;
+import com.user.festivalbizerte.Utils.Helpers;
 import com.user.festivalbizerte.WebService.Urls;
+import com.user.festivalbizerte.WebService.WebService;
+
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +41,9 @@ import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class StartQuiz extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     Context context;
@@ -84,7 +99,38 @@ public class StartQuiz extends AppCompatActivity implements NavigationView.OnNav
 
     @OnClick(R.id.start)
     public void Start() {
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat timeormat = new SimpleDateFormat("hh:mm");
+        String date = dateformat.format(c.getTime());
+        String time = timeormat.format(c.getTime());
+        System.out.println(date);
+        System.out.println(time);
+//        Intent intent = new Intent(context, QuestionsActivity.class);
+//        intent.putExtra("Id_quiz",1);
+//        startActivity(intent);
+        Call<RSResponse> callUpload = WebService.getInstance().getApi().getQuiz("2019-04-28","22:06");
+        callUpload.enqueue(new Callback<RSResponse>() {
+            @Override
+            public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
+                if (response.body() != null) {
+                    if (response.body().getStatus() == 1) {
+                        Quiz tab = new Gson().fromJson(new Gson().toJson(response.body().getData()), Quiz.class);
 
+                        Intent intent = new Intent(context, QuestionsActivity.class);
+                        intent.putExtra("Id_quiz",tab.getId_quiz());
+                        startActivity(intent);
+                    } else if (response.body().getStatus() == 0) {
+                        Toast.makeText(getApplicationContext(), "Pas de Quiz pour le moument ", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RSResponse> call, Throwable t) {
+                Log.d("err", t.getMessage());
+            }
+        });
     }
 
     @Override

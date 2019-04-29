@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
-        //startActivity(new Intent(this,MainActivity.class));
+        startActivity(new Intent(this,StartQuiz.class));
         context = this;
         ButterKnife.bind(this);
         pref = getApplicationContext().getSharedPreferences("Users", MODE_PRIVATE);
