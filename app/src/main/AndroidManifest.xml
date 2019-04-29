@@ -23,7 +23,8 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="n">
-        <activity android:name=".QuestionsActivity"></activity>
+        <activity android:name=".JeuxActivity"></activity>
+        <activity android:name=".QuestionsActivity" />
         <activity android:name=".SponsorActivity" />
         <activity android:name=".StartQuiz" />
         <activity
