@@ -20,7 +20,10 @@
         <item name="colorAccent">#0788F5</item>
 
     </style>
-
+    <style name="LinearProgress" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/white</item>
+        <item name="android:progressBackgroundTint">@android:color/transparent</item>
+    </style>
     <!--<style name="counterText">-->
         <!--<item name="android:textColor">#aa344955</item>-->
     <!--</style>-->

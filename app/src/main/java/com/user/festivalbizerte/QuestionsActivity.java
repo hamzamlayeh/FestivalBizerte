@@ -26,6 +26,7 @@ import butterknife.OnClick;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
+import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -147,5 +148,9 @@ public class QuestionsActivity extends AppCompatActivity {
     }
     private void updateScore(int point) {
         //mScoreView.setText(String.format("%s", String.valueOf(point)));
+    }
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
     }
 }

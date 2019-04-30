@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(context, SponsorActivity.class));
                 break;
             case R.id.Quiz:
-                startActivity(new Intent(context, StartQuiz.class));
+                startActivity(new Intent(context, JeuxActivity.class));
                 break;
             case R.id.addamis:
                 startActivity(new Intent(context, InviteAmisActivity.class));
