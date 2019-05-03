@@ -11,8 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="?attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
         android:onClick="Camera"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -27,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Camera"
+            android:text="@string/camera"
             android:textSize="16sp" />
 
     </LinearLayout>
@@ -37,8 +35,6 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="?attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
         android:onClick="Gallery"
         android:gravity="center_vertical"
         android:orientation="horizontal"

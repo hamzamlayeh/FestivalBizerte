@@ -31,6 +31,7 @@ import com.user.festivalbizerte.Model.UserInfos;
 import com.user.festivalbizerte.Utils.Helpers;
 import com.user.festivalbizerte.WebService.Urls;
 import com.user.festivalbizerte.WebService.WebService;
+import com.user.festivalbizerte.session.RSSession;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,8 +55,9 @@ public class SponsorActivity extends AppCompatActivity implements NavigationView
     DrawerLayout drawerLayout;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.navigation)
+    NavigationView navigationView;
     ActionBarDrawerToggle actionBarDrawerToggle;
-    SharedPreferences pref;
     SponsorAdapter sponsorAdapter;
     List<Sponsors> ListSponsor = new ArrayList<>();
 
@@ -81,24 +83,23 @@ public class SponsorActivity extends AppCompatActivity implements NavigationView
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        NavigationView navigationView = findViewById(R.id.navigation);
-        navigationView.bringToFront();
-        navigationView.setNavigationItemSelectedListener((NavigationView.OnNavigationItemSelectedListener) context);
-
-        View headerView = navigationView.getHeaderView(0);
-        SimpleDraweeView imageProfile = headerView.findViewById(R.id.ImageUser);
-        TextView EmailProfile = headerView.findViewById(R.id.Email);
+        loadHeaderView(RSSession.getLocalStorage(context));
 
         if (Helpers.isConnected(context))
             loadSponsor();
         else
             Helpers.ShowMessageConnection(context);
 
-        pref = getApplicationContext().getSharedPreferences("Users", MODE_PRIVATE);
-        UserInfos userInfos = new Gson().fromJson(pref.getString("User", null), UserInfos.class);
+    }
+
+    private void loadHeaderView(UserInfos userInfos) {
+        navigationView.bringToFront();
+        navigationView.setNavigationItemSelectedListener(this);
         if (userInfos != null) {
+            View headerView = navigationView.getHeaderView(0);
+            SimpleDraweeView imageProfile = headerView.findViewById(R.id.ImageUser);
+            TextView EmailProfile = headerView.findViewById(R.id.Email);
             EmailProfile.setText(userInfos.getEmail());
-//            Log.i("photo",userInfos.getPhoto());
             RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
             roundingParams.setBorder(getResources().getColor(R.color.white), 2f);
             roundingParams.setRoundAsCircle(true);
@@ -150,6 +151,9 @@ public class SponsorActivity extends AppCompatActivity implements NavigationView
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
+            case R.id.acueil:
+                startActivity(new Intent(context, MainActivity.class));
+                break;
             case R.id.programme:
                 startActivity(new Intent(context, ProgrameActivity.class));
                 break;
@@ -163,13 +167,13 @@ public class SponsorActivity extends AppCompatActivity implements NavigationView
                 startActivity(new Intent(context, SponsorActivity.class));
                 break;
             case R.id.Quiz:
-                startActivity(new Intent(context, StartQuiz.class));
+                startActivity(new Intent(context, JeuxActivity.class));
                 break;
             case R.id.addamis:
                 startActivity(new Intent(context, InviteAmisActivity.class));
                 break;
             case R.id.info:
-                startActivity(new Intent(context, ServiceActivity.class));
+                startActivity(new Intent(context, InfoActivity.class));
                 break;
             case R.id.Profile:
                 startActivity(new Intent(context, ProfileActivity.class));

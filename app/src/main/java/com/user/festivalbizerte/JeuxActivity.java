@@ -1,6 +1,7 @@
 package com.user.festivalbizerte;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,9 +24,23 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.gson.Gson;
+import com.user.festivalbizerte.Model.Quiz;
+import com.user.festivalbizerte.Model.RSResponse;
+import com.user.festivalbizerte.Model.UserInfos;
 import com.user.festivalbizerte.Utils.Constants;
 import com.user.festivalbizerte.Utils.Helpers;
+import com.user.festivalbizerte.WebService.Urls;
+import com.user.festivalbizerte.WebService.WebService;
+import com.user.festivalbizerte.session.RSSession;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +49,9 @@ import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class JeuxActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     Context context;
@@ -41,8 +59,11 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawerLayout;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.navigation)
+    NavigationView navigationView;
     ActionBarDrawerToggle actionBarDrawerToggle;
-    View DialogBottomView = null;
+    View DialogBottomView = null, popupInfoDialogView = null;
+    AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +71,6 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_questions);
         setContentView(R.layout.activity_jeux);
         ButterKnife.bind(this);
         context = this;
@@ -67,9 +87,23 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        NavigationView navigationView = findViewById(R.id.navigation);
+        loadHeaderView(RSSession.getLocalStorage(context));
+    }
+
+    private void loadHeaderView(UserInfos userInfos) {
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
+        if (userInfos != null) {
+            View headerView = navigationView.getHeaderView(0);
+            SimpleDraweeView imageProfile = headerView.findViewById(R.id.ImageUser);
+            TextView EmailProfile = headerView.findViewById(R.id.Email);
+            EmailProfile.setText(userInfos.getEmail());
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
+            roundingParams.setBorder(getResources().getColor(R.color.white), 2f);
+            roundingParams.setRoundAsCircle(true);
+            imageProfile.getHierarchy().setRoundingParams(roundingParams);
+            imageProfile.setImageURI(Urls.IMAGE_PROFIL + userInfos.getPhoto());
+        }
     }
 
     @Override
@@ -85,6 +119,9 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
+            case R.id.acueil:
+                startActivity(new Intent(context, MainActivity.class));
+                break;
             case R.id.programme:
                 startActivity(new Intent(context, ProgrameActivity.class));
                 break;
@@ -104,7 +141,7 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(context, InviteAmisActivity.class));
                 break;
             case R.id.info:
-                startActivity(new Intent(context, ServiceActivity.class));
+                startActivity(new Intent(context, InfoActivity.class));
                 break;
             case R.id.Profile:
                 startActivity(new Intent(context, ProfileActivity.class));
@@ -115,6 +152,22 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         return false;
+    }
+
+    @OnClick(R.id.imgInfo)
+    public void InfoDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setCancelable(true);
+        initPopupViewControl();
+        alertDialogBuilder.setView(popupInfoDialogView);
+        alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    private void initPopupViewControl() {
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        popupInfoDialogView = layoutInflater.inflate(R.layout.info_dialog, null);
+
     }
 
     @Override
@@ -140,7 +193,38 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
 
     @OnClick(R.id.cardeview2)
     public void GoQuiz() {
-        startActivity(new Intent(this, StartQuiz.class));
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat timeormat = new SimpleDateFormat("hh:mm");
+        String date = dateformat.format(c.getTime());
+        String time = timeormat.format(c.getTime());
+        System.out.println(date);
+        System.out.println(time);
+//        Intent intent = new Intent(context, QuestionsActivity.class);
+//        intent.putExtra("Id_quiz",1);
+//        startActivity(intent);
+        Call<RSResponse> callUpload = WebService.getInstance().getApi().getQuiz("2019-05-03", "22:06");
+        callUpload.enqueue(new Callback<RSResponse>() {
+            @Override
+            public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
+                if (response.body() != null) {
+                    if (response.body().getStatus() == 1) {
+                        Quiz tab = new Gson().fromJson(new Gson().toJson(response.body().getData()), Quiz.class);
+
+                        Intent intent = new Intent(context, StartQuiz.class);
+                        intent.putExtra("Quiz", new Gson().toJson(tab));
+                        startActivity(intent);
+                    } else if (response.body().getStatus() == 0) {
+                        Toast.makeText(getApplicationContext(), "Pas de Quiz pour le moument ", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RSResponse> call, Throwable t) {
+                Log.d("err", t.getMessage());
+            }
+        });
     }
 
     @OnClick(R.id.imgInfo)
@@ -192,7 +276,6 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == Constants.REQUEST_PERMISSION_CAMERA) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                Log.i("camera", "ok");
                 Intent intent = new Intent(context, SelfiActivity.class);
                 intent.putExtra("Methode", Constants.CAMERA);
                 startActivity(intent);

@@ -49,9 +49,11 @@
                 android:layout_width="66dp"
                 android:layout_height="53dp"
                 android:padding="10dp"
+                android:clickable="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar"
-                app:srcCompat="@drawable/ic_infos" />
+                app:srcCompat="@drawable/ic_infos"
+                android:focusable="true" />
 
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"

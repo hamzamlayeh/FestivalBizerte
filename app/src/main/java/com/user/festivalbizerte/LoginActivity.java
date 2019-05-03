@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -15,9 +18,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipeline;
 import com.google.gson.Gson;
 import com.user.festivalbizerte.Model.RSResponse;
 import com.user.festivalbizerte.Model.User;
@@ -42,13 +46,16 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     Context context;
     @BindView(R.id.email)
-    EditText Email;
+    TextInputEditText Email;
     @BindView(R.id.password)
-    EditText Password;
+    TextInputEditText Password;
+    @BindView(R.id.input_layout_email)
+    TextInputLayout layoutEmail;
+    @BindView(R.id.input_layout_password)
+    TextInputLayout layoutPassword;
     String email, password;
-    SharedPreferences pref;
-    SharedPreferences.Editor editors;
     DialogFragment Loding = Loader.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +66,6 @@ public class LoginActivity extends AppCompatActivity {
         //startActivity(new Intent(this,StartQuiz.class));
         context = this;
         ButterKnife.bind(this);
-        pref = getApplicationContext().getSharedPreferences("Users", MODE_PRIVATE);
         ViewPump.init(ViewPump.builder()
                 .addInterceptor(new CalligraphyInterceptor(
                         new CalligraphyConfig.Builder()
@@ -67,9 +73,15 @@ public class LoginActivity extends AppCompatActivity {
                                 .setFontAttrId(R.attr.fontPath)
                                 .build()))
                 .build());
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        imagePipeline.clearMemoryCaches();
+        imagePipeline.clearDiskCaches();
+        imagePipeline.clearCaches();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkFineLocationPermission();
         }
+
     }
 
     @Override
@@ -88,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
         password = Password.getText().toString().trim();
         if (Valider()) {
             if (Helpers.isConnected(context)) {
-                Loding.show(getSupportFragmentManager(),Constants.LODING);
+                Loding.show(getSupportFragmentManager(), Constants.LODING);
                 User user = new User(email, password);
                 Call<RSResponse> callUpload = WebService.getInstance().getApi().loginUser(user);
                 callUpload.enqueue(new Callback<RSResponse>() {
@@ -97,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (response.body() != null) {
                             Loding.dismiss();
                             if (response.body().getStatus() == 1) {
-                                RSSession.saveIntoSharedPreferences(response.body().getData(),context);
+                                RSSession.saveIntoSharedPreferences(response.body().getData(), context);
 //                                UserInfos user = new Gson().fromJson(new Gson().toJson(response.body().getData()), UserInfos.class);
 //                                editors = pref.edit();
 //                                editors.putString("User", new Gson().toJson(user));
@@ -126,16 +138,22 @@ public class LoginActivity extends AppCompatActivity {
     private boolean Valider() {
         boolean valide = true;
         if (email.isEmpty()) {
-            Email.setError(getString(R.string.champs_obligatoir));
+            layoutEmail.setError(getString(R.string.champs_obligatoir));
             valide = false;
+        }else {
+            layoutEmail.setError(null);
         }
         if (!email.isEmpty() && (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
-            Email.setError(getString(R.string.email_invalide));
+            layoutEmail.setError(getString(R.string.email_invalide));
             valide = false;
+        }else {
+            layoutEmail.setError(null);
         }
         if (password.isEmpty()) {
-            Password.setError(getString(R.string.champs_obligatoir));
+            layoutPassword.setError(getString(R.string.champs_obligatoir));
             valide = false;
+        }else {
+            layoutPassword.setError(null);
         }
         return valide;
     }

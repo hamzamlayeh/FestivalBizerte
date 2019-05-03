@@ -8,14 +8,20 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -33,6 +39,9 @@ import com.user.festivalbizerte.WebService.WebService;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,23 +60,25 @@ import retrofit2.Response;
 public class RegisterActivity extends AppCompatActivity {
     Context context;
     @BindView(R.id.regName)
-    EditText Nom;
+    TextInputEditText Nom;
     @BindView(R.id.regPrenom)
-    EditText Prenom;
+    TextInputEditText Prenom;
     @BindView(R.id.regMail)
-    EditText Email;
+    TextInputEditText Email;
     @BindView(R.id.tel)
-    EditText Tel;
+    TextInputEditText Tel;
     @BindView(R.id.regPassword)
-    EditText Password;
+    TextInputEditText Password;
     @BindView(R.id.regPassword2)
-    EditText ConfiremPassword;
+    TextInputEditText ConfiremPassword;
     @BindView(R.id.regUserPhoto)
     ImageView Photo;
     String email, password, nom, prenom, tel, confiremPassword;
     Uri imageUri = null;
     private FileCompressor mCompressor;
     private File mPhotoFile;
+    BottomSheetDialog mBottomSheetDialog;
+    View DialogBottomView = null;
     DialogFragment Loding = Loader.getInstance();
 
     @Override
@@ -108,7 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
         tel = Tel.getText().toString().trim();
         if (Valider()) {
             if (Helpers.isConnected(context)) {
-                Loding.show(getSupportFragmentManager(),Constants.LODING);
+                Loding.show(getSupportFragmentManager(), Constants.LODING);
                 MultipartBody.Part part = null;
                 if (imageUri != null) {
                     part = prepareFilePart(imageUri);
@@ -182,7 +193,7 @@ public class RegisterActivity extends AppCompatActivity {
             ConfiremPassword.setError("password n ai pas identique ");
             valide = false;
         }
-        if (imageUri==null) {
+        if (imageUri == null) {
             Toast.makeText(context, "Choisir une image", Toast.LENGTH_SHORT).show();
             valide = false;
         }
@@ -191,6 +202,26 @@ public class RegisterActivity extends AppCompatActivity {
 
     @OnClick(R.id.regUserPhoto)
     public void ChooseImage() {
+        mBottomSheetDialog = new BottomSheetDialog(context);
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        DialogBottomView = layoutInflater.inflate(R.layout.bottom_dialog, null);
+        mBottomSheetDialog.setContentView(DialogBottomView);
+        mBottomSheetDialog.show();
+
+    }
+
+    public void Camera(View view) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.REQUEST_PERMISSION_CAMERA);
+            }
+        } else {
+            openCamera();
+        }
+    }
+
+    public void Gallery(View view) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.REQUEST_PERMISSION_STORAGE);
@@ -206,6 +237,23 @@ public class RegisterActivity extends AppCompatActivity {
         startActivityForResult(pickPhoto, Constants.REQUEST_GALLERY_PHOTO);
     }
 
+    private void openCamera() {
+        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (pictureIntent.resolveActivity(context.getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            mPhotoFile = photoFile;
+            Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", photoFile);
+            pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            startActivityForResult(pictureIntent, Constants.REQUEST_TAKE_PHOTO);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
@@ -219,6 +267,17 @@ public class RegisterActivity extends AppCompatActivity {
                 String path = MediaStore.Images.Media.insertImage(getContentResolver(), BitmapFactory.decodeFile(mPhotoFile.getAbsolutePath()), "Image Description", null);
                 imageUri = Uri.parse(path);
                 Photo.setImageURI(imageUri);
+                mBottomSheetDialog.dismiss();
+            } else if (requestCode == Constants.REQUEST_TAKE_PHOTO) {
+                try {
+                    mPhotoFile = mCompressor.compressToFile(mPhotoFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String path = MediaStore.Images.Media.insertImage(getContentResolver(), BitmapFactory.decodeFile(mPhotoFile.getAbsolutePath()), "Image Description", null);
+                imageUri = Uri.parse(path);
+                Photo.setImageURI(imageUri);
+                mBottomSheetDialog.dismiss();
             }
         }
     }
@@ -246,6 +305,10 @@ public class RegisterActivity extends AppCompatActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openGallery();
             }
+        } else if (requestCode == Constants.REQUEST_PERMISSION_CAMERA) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                openCamera();
+            }
         }
     }
 
@@ -253,9 +316,17 @@ public class RegisterActivity extends AppCompatActivity {
         return RequestBody.create(MultipartBody.FORM, value);
     }
 
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        return File.createTempFile(imageFileName, ".jpg", storageDir);
+    }
+
     private MultipartBody.Part prepareFilePart(Uri fileUri) {
         File file = FileUtils.getFile(context, fileUri);
         RequestBody requestBody = RequestBody.create(MediaType.parse(getContentResolver().getType(fileUri)), file);
         return MultipartBody.Part.createFormData("image", file.getName(), requestBody);
     }
+
 }

@@ -38,4 +38,7 @@
     <string name="s_il_vous_pla_t_attendez">S\'il vous plaît, attendez…</string>
     <string name="bienvenue">Bienvenue</string>
     <string name="annuler">Annuler</string>
+    <string name="bien_jou">Bien Joué</string>
+    <string name="camera">Camera</string>
+    <string name="s_inscrire">S\'inscrire</string>
 </resources>

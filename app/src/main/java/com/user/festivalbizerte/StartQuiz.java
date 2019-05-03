@@ -2,14 +2,12 @@ package com.user.festivalbizerte;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -22,17 +20,11 @@ import android.widget.Toast;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
-import com.user.festivalbizerte.Adapter.ArtisteAdapter;
 import com.user.festivalbizerte.Model.Quiz;
-import com.user.festivalbizerte.Model.RSResponse;
 import com.user.festivalbizerte.Model.UserInfos;
-import com.user.festivalbizerte.Utils.Helpers;
 import com.user.festivalbizerte.WebService.Urls;
-import com.user.festivalbizerte.WebService.WebService;
+import com.user.festivalbizerte.session.RSSession;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,9 +33,7 @@ import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
 
 public class StartQuiz extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     Context context;
@@ -51,8 +41,12 @@ public class StartQuiz extends AppCompatActivity implements NavigationView.OnNav
     DrawerLayout drawerLayout;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.navigation)
+    NavigationView navigationView;
+    @BindView(R.id.nomquiz)
+    TextView nomQuiz;
     ActionBarDrawerToggle actionBarDrawerToggle;
-    SharedPreferences pref;
+    int Id_Quiz;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,19 +70,23 @@ public class StartQuiz extends AppCompatActivity implements NavigationView.OnNav
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        NavigationView navigationView = findViewById(R.id.navigation);
+        Quiz quiz = new Gson().fromJson(getIntent().getExtras().getString("Quiz", null), Quiz.class);
+        if (quiz != null) {
+            Id_Quiz = quiz.getId_quiz();
+            nomQuiz.setText(quiz.getNom());
+        }
+        loadHeaderView(RSSession.getLocalStorage(context));
+
+    }
+
+    private void loadHeaderView(UserInfos userInfos) {
         navigationView.bringToFront();
-        navigationView.setNavigationItemSelectedListener((NavigationView.OnNavigationItemSelectedListener) context);
-
-        View headerView = navigationView.getHeaderView(0);
-        SimpleDraweeView imageProfile = headerView.findViewById(R.id.ImageUser);
-        TextView EmailProfile = headerView.findViewById(R.id.Email);
-
-        pref = getApplicationContext().getSharedPreferences("Users", MODE_PRIVATE);
-        UserInfos userInfos = new Gson().fromJson(pref.getString("User", null), UserInfos.class);
+        navigationView.setNavigationItemSelectedListener(this);
         if (userInfos != null) {
+            View headerView = navigationView.getHeaderView(0);
+            SimpleDraweeView imageProfile = headerView.findViewById(R.id.ImageUser);
+            TextView EmailProfile = headerView.findViewById(R.id.Email);
             EmailProfile.setText(userInfos.getEmail());
-//            Log.i("photo",userInfos.getPhoto());
             RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
             roundingParams.setBorder(getResources().getColor(R.color.white), 2f);
             roundingParams.setRoundAsCircle(true);
@@ -99,38 +97,11 @@ public class StartQuiz extends AppCompatActivity implements NavigationView.OnNav
 
     @OnClick(R.id.start)
     public void Start() {
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat timeormat = new SimpleDateFormat("hh:mm");
-        String date = dateformat.format(c.getTime());
-        String time = timeormat.format(c.getTime());
-        System.out.println(date);
-        System.out.println(time);
-//        Intent intent = new Intent(context, QuestionsActivity.class);
-//        intent.putExtra("Id_quiz",1);
-//        startActivity(intent);
-        Call<RSResponse> callUpload = WebService.getInstance().getApi().getQuiz("2019-04-28","22:06");
-        callUpload.enqueue(new Callback<RSResponse>() {
-            @Override
-            public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
-                if (response.body() != null) {
-                    if (response.body().getStatus() == 1) {
-                        Quiz tab = new Gson().fromJson(new Gson().toJson(response.body().getData()), Quiz.class);
-
-                        Intent intent = new Intent(context, QuestionsActivity.class);
-                        intent.putExtra("Id_quiz",tab.getId_quiz());
-                        startActivity(intent);
-                    } else if (response.body().getStatus() == 0) {
-                        Toast.makeText(getApplicationContext(), "Pas de Quiz pour le moument ", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RSResponse> call, Throwable t) {
-                Log.d("err", t.getMessage());
-            }
-        });
+        if (Id_Quiz != 0) {
+            Intent intent = new Intent(context, QuestionsActivity.class);
+            intent.putExtra("Id_quiz", Id_Quiz);
+            startActivity(intent);
+        }
     }
 
     @Override

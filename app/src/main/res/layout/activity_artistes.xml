@@ -69,29 +69,7 @@
         app:headerLayout="@layout/header"
         app:itemIconTint="@color/colorPrimary"
         app:itemTextColor="#fff"
-        app:menu="@menu/menu">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/ImageUser"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="50dp"
-            android:src="@drawable/userphoto"
-            app:civ_border_color="#FFf"
-            app:civ_border_width="2dp" />
-
-        <TextView
-            android:id="@+id/Email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="130dp"
-            android:text="khaledhizawi@gmail.com"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-    </android.support.design.widget.NavigationView>
+        app:menu="@menu/menu"/>
 
 
 </android.support.v4.widget.DrawerLayout>

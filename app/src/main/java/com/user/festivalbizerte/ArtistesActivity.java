@@ -13,16 +13,23 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.user.festivalbizerte.Adapter.ArtisteAdapter;
 import com.user.festivalbizerte.Model.Artistes;
 import com.user.festivalbizerte.Model.RSResponse;
+import com.user.festivalbizerte.Model.UserInfos;
 import com.user.festivalbizerte.Utils.Helpers;
+import com.user.festivalbizerte.WebService.Urls;
 import com.user.festivalbizerte.WebService.WebService;
+import com.user.festivalbizerte.session.RSSession;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,9 +53,11 @@ public class ArtistesActivity extends AppCompatActivity implements NavigationVie
     DrawerLayout drawerLayout;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.navigation)
+    NavigationView navigationView;
     ActionBarDrawerToggle actionBarDrawerToggle;
     ArtisteAdapter newsAdapter;
-    List<Artistes> listArtiste =new ArrayList<>();
+    List<Artistes> listArtiste = new ArrayList<>();
     Context context;
 
     @Override
@@ -73,14 +82,28 @@ public class ArtistesActivity extends AppCompatActivity implements NavigationVie
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        NavigationView navigationView = findViewById(R.id.navigation);
-        navigationView.bringToFront();
-        navigationView.setNavigationItemSelectedListener((NavigationView.OnNavigationItemSelectedListener) context);
+        loadHeaderView(RSSession.getLocalStorage(context));
 
         if (Helpers.isConnected(context)) {
             loadArtiste();
         } else {
             Helpers.ShowMessageConnection(context);
+        }
+    }
+
+    private void loadHeaderView(UserInfos userInfos) {
+        navigationView.bringToFront();
+        navigationView.setNavigationItemSelectedListener(this);
+        if (userInfos != null) {
+            View headerView = navigationView.getHeaderView(0);
+            SimpleDraweeView imageProfile = headerView.findViewById(R.id.ImageUser);
+            TextView EmailProfile = headerView.findViewById(R.id.Email);
+            EmailProfile.setText(userInfos.getEmail());
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
+            roundingParams.setBorder(getResources().getColor(R.color.white), 2f);
+            roundingParams.setRoundAsCircle(true);
+            imageProfile.getHierarchy().setRoundingParams(roundingParams);
+            imageProfile.setImageURI(Urls.IMAGE_PROFIL + userInfos.getPhoto());
         }
     }
 
@@ -96,7 +119,7 @@ public class ArtistesActivity extends AppCompatActivity implements NavigationVie
 
                         newsAdapter = new ArtisteAdapter(context, listArtiste);
                         NewsRecyclerview.setAdapter(newsAdapter);
-                        NewsRecyclerview.setLayoutManager(new GridLayoutManager(context,getResources().getInteger(R.integer.artiste_item)));
+                        NewsRecyclerview.setLayoutManager(new GridLayoutManager(context, getResources().getInteger(R.integer.artiste_item)));
                     } else if (response.body().getStatus() == 0) {
                         Toast.makeText(getApplicationContext(), "Pas de Artiste ", Toast.LENGTH_SHORT).show();
                     }
@@ -127,6 +150,9 @@ public class ArtistesActivity extends AppCompatActivity implements NavigationVie
 
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
+            case R.id.acueil:
+                startActivity(new Intent(context, MainActivity.class));
+                break;
             case R.id.programme:
                 startActivity(new Intent(context, ProgrameActivity.class));
                 break;
@@ -140,13 +166,13 @@ public class ArtistesActivity extends AppCompatActivity implements NavigationVie
                 startActivity(new Intent(context, SponsorActivity.class));
                 break;
             case R.id.Quiz:
-                startActivity(new Intent(context, StartQuiz.class));
+                startActivity(new Intent(context, JeuxActivity.class));
                 break;
             case R.id.addamis:
                 startActivity(new Intent(context, InviteAmisActivity.class));
                 break;
             case R.id.info:
-                startActivity(new Intent(context, ServiceActivity.class));
+                startActivity(new Intent(context, InfoActivity.class));
                 break;
             case R.id.Profile:
                 startActivity(new Intent(context, ProfileActivity.class));

@@ -28,13 +28,19 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.user.festivalbizerte.Adapter.ContactTelAdapter;
 import com.user.festivalbizerte.Helper.RecyclerViewClickListener;
 import com.user.festivalbizerte.Helper.RecyclerViewTouchListener;
 import com.user.festivalbizerte.Model.ContactTelItem;
+import com.user.festivalbizerte.Model.UserInfos;
 import com.user.festivalbizerte.Utils.Constants;
+import com.user.festivalbizerte.WebService.Urls;
+import com.user.festivalbizerte.session.RSSession;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,7 +56,6 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 public class InviteAmisActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    //final static int MY_PERMISSIONS_REQUEST = 2;
     @BindView(R.id.news_rv)
     RecyclerView NewsRecyclerview;
     @BindView(R.id.search_input)
@@ -59,6 +64,8 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
     DrawerLayout drawerLayout;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.navigation)
+    NavigationView navigationView;
     ActionBarDrawerToggle actionBarDrawerToggle;
     ContactTelAdapter newsAdapter;
     List<ContactTelItem> ListRepertoire = new ArrayList<>();
@@ -88,17 +95,12 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        NavigationView navigationView = findViewById(R.id.navigation);
-        navigationView.bringToFront();
-        navigationView.setNavigationItemSelectedListener((NavigationView.OnNavigationItemSelectedListener) context);
-
+        loadHeaderView(RSSession.getLocalStorage(context));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkSMSPermission();
         }
-
         recupContact();
         // adapter ini and setup
-
         newsAdapter = new ContactTelAdapter(this, ListRepertoire);
         NewsRecyclerview.setAdapter(newsAdapter);
         NewsRecyclerview.setLayoutManager(new LinearLayoutManager(this));
@@ -146,10 +148,23 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
 
             }
         });
-
-
     }
 
+    private void loadHeaderView(UserInfos userInfos) {
+        navigationView.bringToFront();
+        navigationView.setNavigationItemSelectedListener(this);
+        if (userInfos != null) {
+            View headerView = navigationView.getHeaderView(0);
+            SimpleDraweeView imageProfile = headerView.findViewById(R.id.ImageUser);
+            TextView EmailProfile = headerView.findViewById(R.id.Email);
+            EmailProfile.setText(userInfos.getEmail());
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
+            roundingParams.setBorder(getResources().getColor(R.color.white), 2f);
+            roundingParams.setRoundAsCircle(true);
+            imageProfile.getHierarchy().setRoundingParams(roundingParams);
+            imageProfile.setImageURI(Urls.IMAGE_PROFIL + userInfos.getPhoto());
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -158,14 +173,19 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
             return true;
         }
         return super.onOptionsItemSelected(item);
-
     }
 
 
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
+            case R.id.acueil:
+                startActivity(new Intent(context, MainActivity.class));
+                break;
             case R.id.programme:
                 startActivity(new Intent(context, ProgrameActivity.class));
+                break;
+            case R.id.artiste:
+                startActivity(new Intent(context, ArtistesActivity.class));
                 break;
             case R.id.service:
                 startActivity(new Intent(context, ServiceActivity.class));
@@ -174,13 +194,13 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
                 startActivity(new Intent(context, ServiceActivity.class));
                 break;
             case R.id.Quiz:
-                startActivity(new Intent(context, ServiceActivity.class));
+                startActivity(new Intent(context, JeuxActivity.class));
                 break;
             case R.id.addamis:
                 startActivity(new Intent(context, InviteAmisActivity.class));
                 break;
             case R.id.info:
-                startActivity(new Intent(context, ServiceActivity.class));
+                startActivity(new Intent(context, InfoActivity.class));
                 break;
             case R.id.Profile:
                 startActivity(new Intent(context, ProfileActivity.class));

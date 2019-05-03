@@ -3,7 +3,6 @@ package com.user.festivalbizerte;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -14,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,12 +23,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.core.ImagePipeline;
@@ -49,6 +45,7 @@ import com.user.festivalbizerte.Utils.Constants;
 import com.user.festivalbizerte.Utils.Helpers;
 import com.user.festivalbizerte.WebService.Urls;
 import com.user.festivalbizerte.WebService.WebService;
+import com.user.festivalbizerte.session.RSSession;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +54,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.hdodenhof.circleimageview.CircleImageView;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
@@ -74,13 +70,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawerLayout;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.navigation)
+    NavigationView navigationView;
     @BindView(R.id.news_rv)
     RecyclerView NewsRecyclerview;
     @BindView(R.id.webview)
     WebView webView;
     @BindView(R.id.description)
     TextView Description;
-    SharedPreferences pref;
     ActionBarDrawerToggle actionBarDrawerToggle;
     ArtistesAdapter newsAdapter;
     List<ArtisteProgramee> ListArtiste = new ArrayList<>();
@@ -102,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 .setFontAttrId(R.attr.fontPath)
                                 .build()))
                 .build());
+
         SupportMapFragment mapfrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         String Url = "<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/x8AfdXvBOtc\" frameborder=\"0\" allowfullscreen></iframe>";
 
@@ -111,27 +109,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        NavigationView navigationView = findViewById(R.id.navigation);
-        navigationView.bringToFront();
-        navigationView.setNavigationItemSelectedListener(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkFineLocationPermission();
         }
-        View headerView = navigationView.getHeaderView(0);
-        SimpleDraweeView imageProfile = headerView.findViewById(R.id.ImageUser);
-        TextView EmailProfile = headerView.findViewById(R.id.Email);
 
-        pref = getApplicationContext().getSharedPreferences("local_storage_users", MODE_PRIVATE);
-        UserInfos userInfos = new Gson().fromJson(pref.getString("local_storage_users", null), UserInfos.class);
-        if (userInfos != null) {
-            EmailProfile.setText(userInfos.getEmail());
-//            Log.i("photo",userInfos.getPhoto());
-            RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
-            roundingParams.setBorder(getResources().getColor(R.color.white), 2f);
-            roundingParams.setRoundAsCircle(true);
-            imageProfile.getHierarchy().setRoundingParams(roundingParams);
-            imageProfile.setImageURI(Urls.IMAGE_PROFIL + userInfos.getPhoto());
-        }
+        loadHeaderView(RSSession.getLocalStorage(context));
 
         if (Helpers.isConnected(context)) {
             GetArtistes();
@@ -146,6 +128,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mapfrag.getMapAsync(this);
 
+    }
+
+    private void loadHeaderView(UserInfos userInfos) {
+        navigationView.bringToFront();
+        navigationView.setNavigationItemSelectedListener(this);
+        if (userInfos != null) {
+            View headerView = navigationView.getHeaderView(0);
+            SimpleDraweeView imageProfile = headerView.findViewById(R.id.ImageUser);
+            TextView EmailProfile = headerView.findViewById(R.id.Email);
+            EmailProfile.setText(userInfos.getEmail());
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
+            roundingParams.setBorder(getResources().getColor(R.color.white), 2f);
+            roundingParams.setRoundAsCircle(true);
+            imageProfile.getHierarchy().setRoundingParams(roundingParams);
+            imageProfile.setImageURI(Urls.IMAGE_PROFIL + userInfos.getPhoto());
+        }
     }
 
     private void GetArtistes() {
@@ -192,6 +190,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
+            case R.id.acueil:
+                startActivity(new Intent(context, MainActivity.class));
+                break;
             case R.id.programme:
                 startActivity(new Intent(context, ProgrameActivity.class));
                 break;
@@ -211,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(context, InviteAmisActivity.class));
                 break;
             case R.id.info:
-                startActivity(new Intent(context, ServiceActivity.class));
+                startActivity(new Intent(context, InfoActivity.class));
                 break;
             case R.id.Profile:
                 startActivity(new Intent(context, ProfileActivity.class));

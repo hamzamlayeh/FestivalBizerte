@@ -91,15 +91,14 @@ public class SelfiActivity extends AppCompatActivity {
             mPhotoFile = photoFile;
             Uri photoUri = FileProvider.getUriForFile(context, getApplicationContext().getPackageName() + ".provider", photoFile);
             pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-            startActivityForResult(pictureIntent, Constants.REQUEST_PERMISSION_CAMERA);
+            startActivityForResult(pictureIntent, Constants.REQUEST_TAKE_PHOTO);
         }
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == Constants.REQUEST_PERMISSION_CAMERA) {
+            if (requestCode == Constants.REQUEST_TAKE_PHOTO) {
                 try {
                     mPhotoFile = mCompressor.compressToFile(mPhotoFile);
                 } catch (IOException e) {

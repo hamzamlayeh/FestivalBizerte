@@ -20,9 +20,13 @@ public class RSSession {
     }
 
     public static UserInfos getLocalStorage(Context context) {
-        SharedPreferences sharedPreferences =context.getSharedPreferences(SHARED_PREFERENCES_FILE, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_FILE, MODE_PRIVATE);
         String localStorage = sharedPreferences.getString(SHARED_PREFERENCES_FILE, "");
         return new Gson().fromJson(localStorage, UserInfos.class);
+    }
+
+    public static int getIdUser(Context context) {
+        return getLocalStorage(context).getId_user();
     }
 
     public static void cancelSession(Context context) {

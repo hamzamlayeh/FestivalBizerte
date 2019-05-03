@@ -47,8 +47,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                fresco:actualImageScaleType="fitXY"
-                fresco:roundedCornerRadius="6dp"/>
+                fresco:roundBottomEnd="false"
+                fresco:roundBottomStart="false"
+                fresco:fadeDuration="300"
+                fresco:roundWithOverlayColor="@color/white"
+                fresco:roundedCornerRadius="5dp"
+                fresco:roundingBorderColor="@color/white"
+                fresco:roundingBorderWidth="2dp"
+                fresco:actualImageScaleType="fitCenter"/>
 
             <TextView
                 android:id="@+id/nomPrenom"
