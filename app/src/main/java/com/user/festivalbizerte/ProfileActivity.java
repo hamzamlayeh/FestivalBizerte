@@ -118,7 +118,7 @@ public class ProfileActivity extends AppCompatActivity {
                     Score.setText(String.valueOf(userInfos.getScore_final()));
                     if (userInfos.getPhoto() != null) {
                         RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
-                        roundingParams.setBorder(getResources().getColor(R.color.white), 2f);
+                        roundingParams.setBorder(getResources().getColor(R.color.white), 4f);
                         roundingParams.setRoundAsCircle(true);
                         photo.getHierarchy().setRoundingParams(roundingParams);
                         photo.setImageURI(Urls.IMAGE_PROFIL + userInfos.getPhoto());
@@ -133,7 +133,7 @@ public class ProfileActivity extends AppCompatActivity {
                     phoneEdiText.setText(userInfos.getTel());
                     if (userInfos.getPhoto() != null) {
                         RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
-                        roundingParams.setBorder(getResources().getColor(R.color.colorPrimary), 3f);
+                        roundingParams.setBorder(getResources().getColor(R.color.colorPrimary), 4f);
                         roundingParams.setRoundAsCircle(true);
                         photo_modifier.getHierarchy().setRoundingParams(roundingParams);
                         photo_modifier.setImageURI(Urls.IMAGE_PROFIL + userInfos.getPhoto());

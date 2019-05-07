@@ -44,16 +44,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/imgInfo"
-                android:layout_width="66dp"
-                android:layout_height="53dp"
-                android:padding="10dp"
-                android:clickable="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"
-                app:srcCompat="@drawable/ic_infos"
-                android:focusable="true" />
 
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
@@ -67,6 +57,18 @@
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/imgInfo"
+                        android:layout_width="66dp"
+                        android:layout_height="53dp"
+                        android:layout_marginTop="8dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="10dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_infos" />
 
                     <TextView
                         android:id="@+id/textView7"

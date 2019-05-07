@@ -3,15 +3,10 @@ package com.user.festivalbizerte;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Handler;
-import android.support.v4.view.animation.FastOutLinearInInterpolator;
-import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -23,7 +18,7 @@ import com.google.gson.Gson;
 import com.user.festivalbizerte.Model.QuestionReponse;
 import com.user.festivalbizerte.Model.RSResponse;
 import com.user.festivalbizerte.Model.Reponses;
-import com.user.festivalbizerte.Model.UserPlayers;
+import com.user.festivalbizerte.Model.UserQuiz;
 import com.user.festivalbizerte.Utils.Helpers;
 import com.user.festivalbizerte.WebService.WebService;
 import com.user.festivalbizerte.session.RSSession;
@@ -51,7 +46,6 @@ public class QuestionsActivity extends AppCompatActivity {
     TextView mNbQuestionView;
     @BindView(R.id.question)
     TextView mQuestionView;
-
     @BindView(R.id.choice1)
     Button mButtonChoice1;
     @BindView(R.id.choice2)
@@ -67,7 +61,7 @@ public class QuestionsActivity extends AppCompatActivity {
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
     Context context;
-    int Id_Quiz, mScore = 0, mQuestionNumber = 0, mReponseNumber = 0;
+    int Id_Quiz, mScore = 0, mQuestionNumber = 0, mReponseNumber = 0,correctQuestion=0,worngQuestion=0;
     List<QuestionReponse> listQuestion = new ArrayList<>();
 
     @Override
@@ -123,16 +117,17 @@ public class QuestionsActivity extends AppCompatActivity {
     @OnClick(R.id.choice1)
     public void ChoiceReponse1() {
         mReponseNumber = mQuestionNumber - 1;
-        Log.i("indice", TrouverIndice(listQuestion.get(mReponseNumber).getListeRep()) + "");
         ChangeColorRep(TrouverIndice(listQuestion.get(mReponseNumber).getListeRep()));
 
         if (mChoice1Valide.getText().equals("1")) {
             mScore = mScore + listQuestion.get(mReponseNumber).getListeRep().get(0).getNoteRep();
             updateQuestion();
+            correctQuestion++;
             //This line of code is optiona
             Toast.makeText(getApplicationContext(), "correct/" + mScore, Toast.LENGTH_SHORT).show();
 
         } else {
+            worngQuestion++;
             Toast.makeText(getApplicationContext(), "wrong/", Toast.LENGTH_SHORT).show();
             updateQuestion();
         }
@@ -141,16 +136,16 @@ public class QuestionsActivity extends AppCompatActivity {
     @OnClick(R.id.choice2)
     public void ChoiceReponse2() {
         mReponseNumber = mQuestionNumber - 1;
-        Log.i("indice", TrouverIndice(listQuestion.get(mReponseNumber).getListeRep()) + "");
         ChangeColorRep(TrouverIndice(listQuestion.get(mReponseNumber).getListeRep()));
         if (mChoice2Valide.getText().equals("1")) {
             mScore = mScore + listQuestion.get(mReponseNumber).getListeRep().get(1).getNoteRep();
-            //updateScore(mScore);
             updateQuestion();
+            correctQuestion++;
             //This line of code is optiona
             Toast.makeText(getApplicationContext(), "correct/" + mScore, Toast.LENGTH_SHORT).show();
 
         } else {
+            worngQuestion++;
             Toast.makeText(getApplicationContext(), "wrong/", Toast.LENGTH_SHORT).show();
             updateQuestion();
         }
@@ -159,17 +154,17 @@ public class QuestionsActivity extends AppCompatActivity {
     @OnClick(R.id.choice3)
     public void ChoiceReponse3() {
         mReponseNumber = mQuestionNumber - 1;
-        Log.i("indice", TrouverIndice(listQuestion.get(mReponseNumber).getListeRep()) + "");
         ChangeColorRep(TrouverIndice(listQuestion.get(mReponseNumber).getListeRep()));
 
         if (mChoice3Valide.getText().equals("1")) {
             mScore = mScore + listQuestion.get(mReponseNumber).getListeRep().get(2).getNoteRep();
-            //updateScore(mScore);
             updateQuestion();
+            correctQuestion++;
             //This line of code is optiona
             Toast.makeText(getApplicationContext(), "correct/" + mScore, Toast.LENGTH_SHORT).show();
 
         } else {
+            worngQuestion++;
             Toast.makeText(getApplicationContext(), "wrong/", Toast.LENGTH_SHORT).show();
             updateQuestion();
         }
@@ -235,12 +230,12 @@ public class QuestionsActivity extends AppCompatActivity {
                 public void run() {
                     Calendar c = Calendar.getInstance();
                     SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
-                    UserPlayers userPlayers = new UserPlayers(RSSession.getIdUser(context), mScore, dateformat.format(c.getTime()));
+                    UserQuiz userQuiz = new UserQuiz(RSSession.getIdUser(context), mScore, dateformat.format(c.getTime()));
                     Intent intent = new Intent(context, FinchQuizActivity.class);
-                    intent.putExtra("userPlayers", new Gson().toJson(userPlayers));
+                    intent.putExtra("userQuiz", new Gson().toJson(userQuiz));
                     intent.putExtra("Nbquestion", listQuestion.size());
-                    intent.putExtra("questionCorrect", 1);
-                    intent.putExtra("questionfalse", 1);
+                    intent.putExtra("questionCorrect", correctQuestion);
+                    intent.putExtra("questionfalse", worngQuestion);
                     startActivity(intent);
                 }
             }, 400);

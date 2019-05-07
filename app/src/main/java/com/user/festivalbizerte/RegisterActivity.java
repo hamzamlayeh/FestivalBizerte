@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.FileProvider;
@@ -71,6 +72,20 @@ public class RegisterActivity extends AppCompatActivity {
     TextInputEditText Password;
     @BindView(R.id.regPassword2)
     TextInputEditText ConfiremPassword;
+
+    @BindView(R.id.input_layout_nom)
+    TextInputLayout layoutNom;
+    @BindView(R.id.input_layout_prenom)
+    TextInputLayout layoutPrenom;
+    @BindView(R.id.input_layout_email)
+    TextInputLayout layoutEmail;
+    @BindView(R.id.input_layout_tel)
+    TextInputLayout layoutTel;
+    @BindView(R.id.input_layout_password)
+    TextInputLayout layoutPassword;
+    @BindView(R.id.input_layout_confpassword)
+    TextInputLayout layoutConfirmePassword;
+
     @BindView(R.id.regUserPhoto)
     ImageView Photo;
     String email, password, nom, prenom, tel, confiremPassword;
@@ -162,35 +177,47 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean Valider() {
         boolean valide = true;
         if (email.isEmpty()) {
-            Email.setError(getString(R.string.champs_obligatoir));
+            layoutEmail.setError(getString(R.string.champs_obligatoir));
             valide = false;
+        } else {
+            layoutEmail.setError(null);
         }
         if (!email.isEmpty() && (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
-            Email.setError(getString(R.string.email_invalide));
+            layoutEmail.setError(getString(R.string.email_invalide));
             valide = false;
         }
         if (nom.isEmpty()) {
-            Nom.setError(getString(R.string.champs_obligatoir));
+            layoutNom.setError(getString(R.string.champs_obligatoir));
             valide = false;
+        } else {
+            layoutNom.setError(null);
         }
         if (prenom.isEmpty()) {
-            Prenom.setError(getString(R.string.champs_obligatoir));
+            layoutPrenom.setError(getString(R.string.champs_obligatoir));
             valide = false;
+        } else {
+            layoutPrenom.setError(null);
         }
         if (tel.isEmpty()) {
-            Tel.setError(getString(R.string.champs_obligatoir));
+            layoutTel.setError(getString(R.string.champs_obligatoir));
             valide = false;
+        } else {
+            layoutTel.setError(null);
         }
         if (confiremPassword.isEmpty()) {
-            ConfiremPassword.setError(getString(R.string.champs_obligatoir));
+            layoutConfirmePassword.setError(getString(R.string.champs_obligatoir));
             valide = false;
+        } else {
+            layoutConfirmePassword.setError(null);
         }
         if (password.isEmpty()) {
-            Password.setError(getString(R.string.champs_obligatoir));
+            layoutPassword.setError(getString(R.string.champs_obligatoir));
             valide = false;
+        } else {
+            layoutPassword.setError(null);
         }
         if (!password.isEmpty() && !confiremPassword.isEmpty() && !password.equals(confiremPassword)) {
-            ConfiremPassword.setError("password n ai pas identique ");
+            layoutConfirmePassword.setError("password n'ai pas identique ");
             valide = false;
         }
         if (imageUri == null) {

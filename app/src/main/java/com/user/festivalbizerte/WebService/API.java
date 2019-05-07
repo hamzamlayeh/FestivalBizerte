@@ -3,6 +3,7 @@ package com.user.festivalbizerte.WebService;
 import com.user.festivalbizerte.Model.RSResponse;
 import com.user.festivalbizerte.Model.User;
 import com.user.festivalbizerte.Model.UserInfos;
+import com.user.festivalbizerte.Model.UserQuiz;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -64,11 +65,17 @@ public interface API {
             @Part("id_user") RequestBody id_user
     );
 
+    @FormUrlEncoded
+    @POST("UpdateScore.php")
+    Call<RSResponse> updateScore(@Field("id_user") int id_user, @Field("score") int score);
+
+    @POST("UserQuiz.php")
+    Call<RSResponse> addUserQuiz(@Body UserQuiz userQuiz);
+
     //Quiz
     @FormUrlEncoded
     @POST("GetDaysQuiz.php")
-    Call<RSResponse> getQuiz(@Field("datequiz") String date, @Field("timequiz") String time
-    );
+    Call<RSResponse> getQuiz(@Field("datequiz") String date, @Field("timequiz") String time);
 
     @GET("GetQuestionQuiz.php")
     Call<RSResponse> loadQuestion(@Query("id_quiz") int id_quiz);

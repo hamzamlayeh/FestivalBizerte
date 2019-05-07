@@ -2,13 +2,13 @@ package com.user.festivalbizerte.Model;
 
 import java.io.Serializable;
 
-public class UserPlayers implements Serializable {
+public class UserQuiz implements Serializable {
 
     private int id_user;
     private int score_jour;
     private String date_jouer;
 
-    public UserPlayers(int id_user, int score_jour, String date_jouer) {
+    public UserQuiz(int id_user, int score_jour, String date_jouer) {
         this.id_user = id_user;
         this.score_jour = score_jour;
         this.date_jouer = date_jouer;

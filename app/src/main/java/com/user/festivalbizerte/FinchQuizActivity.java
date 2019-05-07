@@ -2,6 +2,7 @@ package com.user.festivalbizerte;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -9,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -18,17 +20,23 @@ import android.widget.Toast;
 
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.gson.Gson;
-import com.user.festivalbizerte.Model.Quiz;
+import com.user.festivalbizerte.Model.RSResponse;
 import com.user.festivalbizerte.Model.UserInfos;
-import com.user.festivalbizerte.Model.UserPlayers;
+import com.user.festivalbizerte.Model.UserQuiz;
+import com.user.festivalbizerte.Utils.Helpers;
 import com.user.festivalbizerte.WebService.Urls;
+import com.user.festivalbizerte.WebService.WebService;
 import com.user.festivalbizerte.session.RSSession;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +44,9 @@ import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FinchQuizActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     @BindView(R.id.drawerLayout)
@@ -46,8 +57,9 @@ public class FinchQuizActivity extends AppCompatActivity implements NavigationVi
     NavigationView navigationView;
     ActionBarDrawerToggle actionBarDrawerToggle;
     Context context;
-    @BindView(R.id.piechart)
-    PieChart pieChart;
+//    @BindView(R.id.piechart)
+//    PieChart pieChart;
+//    List<PieEntry> pieEntries = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,26 +84,65 @@ public class FinchQuizActivity extends AppCompatActivity implements NavigationVi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         loadHeaderView(RSSession.getLocalStorage(context));
-
         //
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            UserPlayers userPlayers = new Gson().fromJson(extras.getString("userPlayers"), UserPlayers.class);
+            UserQuiz userQuiz = new Gson().fromJson(extras.getString("userQuiz"), UserQuiz.class);
+            addUserQuiz(userQuiz);
             int Nb_question = extras.getInt("Nbquestion");
             int Nb_questionVrai = extras.getInt("questionCorrect");
             int Nb_questionFalse = extras.getInt("questionfalse");
-            Toast.makeText(context, "score:" + userPlayers.getScore_jour() + " /nbqt:" + Nb_question + " /nbqtv:" +
+//            pieEntries.add(new PieEntry(Nb_questionVrai, "correct"));
+//            pieEntries.add(new PieEntry(Nb_questionFalse, "worng"));
+            Toast.makeText(context, "score:" + userQuiz.getScore_jour() + " /nbqt:" + Nb_question + " /nbqtv:" +
                     Nb_questionVrai + " /nbqtf:" + Nb_questionFalse, Toast.LENGTH_SHORT).show();
         }
-//        ArrayList<Entry> yvalues = new ArrayList<Entry>();
-//        yvalues.add(new Entry(8f, 0));
-//        yvalues.add(new Entry(15f, 1));
-//        yvalues.add(new Entry(12f, 2));
-//        yvalues.add(new Entry(25f, 3));
-//        yvalues.add(new Entry(23f, 4));
-//        yvalues.add(new Entry(17f, 5));
+//        pieChart.getDescription().setEnabled(false);
+//        pieChart.setRotationEnabled(true);
+//        pieChart.setHoleRadius(50f);
+//        pieChart.setDrawHoleEnabled(true);
+//        pieChart.setHoleColor(Color.TRANSPARENT);
+//        pieChart.animateY(1000, Easing.EaseInOutCubic);
+//        pieChart.getLegend().setEnabled(true);
+//        pieChart.getLegend().setTextSize(10f);
+//        pieChart.getLegend().setTextColor(Color.WHITE);
 //
-//        PieDataSet dataSet = new PieDataSet(yvalues, "Election Results");
+//        PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
+//        pieDataSet.setSliceSpace(3f);
+//        pieDataSet.setSelectionShift(5f);
+//        pieDataSet.setColors(ColorTemplate.createColors(new int[]{Color.GREEN, Color.RED}));
+//
+//        PieData pieData = new PieData(pieDataSet);
+//        pieData.setValueTextSize(10f);
+//        pieData.setValueTextColor(Color.WHITE);
+//
+//        pieChart.setData(pieData);
+
+    }
+
+    private void addUserQuiz(UserQuiz userQuiz) {
+        if (Helpers.isConnected(context)) {
+            Call<RSResponse> callUpload = WebService.getInstance().getApi().addUserQuiz(userQuiz);
+            callUpload.enqueue(new Callback<RSResponse>() {
+                @Override
+                public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
+                    if (response.body() != null) {
+                        if (response.body().getStatus() == 1) {
+                            Toast.makeText(getApplicationContext(), "Insert", Toast.LENGTH_SHORT).show();
+                        } else if (response.body().getStatus() == 0) {
+                            Toast.makeText(getApplicationContext(), "errr ", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<RSResponse> call, Throwable t) {
+                    Log.d("err", t.getMessage());
+                }
+            });
+        } else {
+            Helpers.ShowMessageConnection(context);
+        }
     }
 
     private void loadHeaderView(UserInfos userInfos) {

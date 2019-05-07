@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -193,13 +194,18 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
 
     @OnClick(R.id.cardeview2)
     public void GoQuiz() {
+//        float[] results = new float[1];
+//        Location.distanceBetween(36.797793, 10.159025, 36.797887, 10.156614, results);
+//        float distanceInMeters = results[0];
+//        boolean isWithin10km = distanceInMeters < 200;
+//        Log.d("mm",distanceInMeters+"//"+isWithin10km);
         Calendar c = Calendar.getInstance();
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat timeormat = new SimpleDateFormat("hh:mm");
         String date = dateformat.format(c.getTime());
         String time = timeormat.format(c.getTime());
-        System.out.println(date);
-        System.out.println(time);
+//        System.out.println(date);
+//        System.out.println(time);
 //        Intent intent = new Intent(context, QuestionsActivity.class);
 //        intent.putExtra("Id_quiz",1);
 //        startActivity(intent);
@@ -225,11 +231,6 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
                 Log.d("err", t.getMessage());
             }
         });
-    }
-
-    @OnClick(R.id.imgInfo)
-    public void DialogInfo() {
-        //startActivity(new Intent(this,StartQuiz.class));
     }
 
     public void Camera(View view) {
@@ -290,4 +291,7 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    public void cancelDialog(View view) {
+        alertDialog.dismiss();
+    }
 }

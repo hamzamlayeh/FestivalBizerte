@@ -7,7 +7,7 @@
         <item
             android:id="@+id/acueil"
             android:checkable="true"
-            android:icon="@drawable/ic_clock"
+            android:icon="@drawable/ic_home"
             android:title="Accueil"
             tools:ignore="HardcodedText" />
         <item
@@ -19,7 +19,7 @@
         <item
             android:id="@+id/artiste"
             android:checkable="true"
-            android:icon="@drawable/ic_clock"
+            android:icon="@drawable/ic_artiste"
             android:title="Artistes"
             tools:ignore="HardcodedText" />
 

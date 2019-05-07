@@ -26,6 +26,6 @@
     <color name="black" >#000000</color>
     <color name="blau" >#232D4B</color>
     <color name="input_reponse" >#2D3457</color>
-    <!--<color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#fff</color>-->
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#1CA8E4</color>
 
 </resources>

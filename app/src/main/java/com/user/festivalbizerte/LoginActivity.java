@@ -140,19 +140,17 @@ public class LoginActivity extends AppCompatActivity {
         if (email.isEmpty()) {
             layoutEmail.setError(getString(R.string.champs_obligatoir));
             valide = false;
-        }else {
+        } else {
             layoutEmail.setError(null);
         }
         if (!email.isEmpty() && (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
             layoutEmail.setError(getString(R.string.email_invalide));
             valide = false;
-        }else {
-            layoutEmail.setError(null);
         }
         if (password.isEmpty()) {
             layoutPassword.setError(getString(R.string.champs_obligatoir));
             valide = false;
-        }else {
+        } else {
             layoutPassword.setError(null);
         }
         return valide;
