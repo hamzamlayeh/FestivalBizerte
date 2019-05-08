@@ -51,12 +51,89 @@
                 android:fillViewport="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar">
+                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                app:layout_constraintVertical_bias="1.0">
 
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/nomquiz6"
+                        android:layout_width="313dp"
+                        android:layout_height="122dp"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginBottom="388dp"
+                        android:background="@drawable/bg_dialog_ask_login"
+                        android:gravity="center"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="20dp"
+                        android:paddingRight="20dp"
+                        android:paddingBottom="90dp"
+                        android:text="Votre scores"
+                        android:textAlignment="center"
+                        android:textColor="@color/title_text_color"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView7"
+                        app:layout_constraintVertical_bias="0.131" />
+
+                    <TextView
+                        android:id="@+id/scorejour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="72dp"
+                        android:layout_marginTop="68dp"
+                        android:text="score de jour"
+                        android:textColor="#000"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="@+id/nomquiz6"
+                        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+                    <TextView
+                        android:id="@+id/textView23"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="68dp"
+                        android:text="100"
+                        android:textColor="@color/title_text_color"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toEndOf="@+id/scorejour"
+                        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+                    <TextView
+                        android:id="@+id/textView24"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="104dp"
+                        android:text="56441"
+                        android:textColor="@color/title_text_color"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toEndOf="@+id/scorejour"
+                        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+                    <TextView
+                        android:id="@+id/scorejour2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="72dp"
+                        android:layout_marginTop="12dp"
+
+                        android:text="score totals"
+                        android:textColor="#000"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="@+id/nomquiz6"
+                        app:layout_constraintTop_toBottomOf="@+id/scorejour" />
 
                     <ImageView
                         android:id="@+id/imgInfo"
@@ -74,14 +151,15 @@
                         android:id="@+id/textView7"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginTop="40dp"
                         android:gravity="center"
                         android:lineSpacingExtra="10dp"
                         android:padding="15dp"
-                        android:text="Bienvenue jeux \n chez festival bizerte "
+                        android:text="Bienvenue jeux \n  festival bizerte "
                         android:textColor="@color/white"
                         android:textSize="23sp"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -90,7 +168,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="80dp"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginTop="180dp"
                         android:layout_marginEnd="80dp"
                         app:cardCornerRadius="10dp"
                         app:cardElevation="10dp"

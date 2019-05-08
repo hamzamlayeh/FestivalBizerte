@@ -173,19 +173,19 @@ public class QuestionsActivity extends AppCompatActivity {
     private void ChangeColorRep(int indice) {
         switch (indice) {
             case 0:
-                mButtonChoice1.setBackgroundColor(Color.GREEN);
-                mButtonChoice2.setBackgroundColor(Color.RED);
-                mButtonChoice3.setBackgroundColor(Color.RED);
+                mButtonChoice1.setBackgroundColor(getResources().getColor(R.color.grin));
+                mButtonChoice2.setBackgroundColor(getResources().getColor(R.color.read));
+                mButtonChoice3.setBackgroundColor(getResources().getColor(R.color.read));
                 break;
             case 1:
-                mButtonChoice1.setBackgroundColor(Color.RED);
-                mButtonChoice2.setBackgroundColor(Color.GREEN);
-                mButtonChoice3.setBackgroundColor(Color.RED);
+                mButtonChoice1.setBackgroundColor(getResources().getColor(R.color.read));
+                mButtonChoice2.setBackgroundColor(getResources().getColor(R.color.grin));
+                mButtonChoice3.setBackgroundColor(getResources().getColor(R.color.read));
                 break;
             case 2:
-                mButtonChoice1.setBackgroundColor(Color.RED);
-                mButtonChoice2.setBackgroundColor(Color.RED);
-                mButtonChoice3.setBackgroundColor(Color.GREEN);
+                mButtonChoice1.setBackgroundColor(getResources().getColor(R.color.read));
+                mButtonChoice2.setBackgroundColor(getResources().getColor(R.color.read));
+                mButtonChoice3.setBackgroundColor(getResources().getColor(R.color.grin));
                 break;
         }
         new Handler().postDelayed(new Runnable() {

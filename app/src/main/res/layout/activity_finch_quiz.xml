@@ -59,7 +59,7 @@
                     android:text="@string/bien_jou"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -87,6 +87,95 @@
                     app:layout_constraintBottom_toBottomOf="@+id/imageView7"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/nomquiz3"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_marginStart="32dp"
+                      android:layout_marginTop="8dp"
+                      android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_dialog_ask_login"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="90dp"
+                    android:text="Resultat"
+                    android:textAlignment="center"
+                    android:textColor="@color/title_text_color"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView7"
+                    app:layout_constraintVertical_bias="0.156" />
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="48dp"
+                    android:text="les réponses vrai"
+                    android:textColor="@color/grin"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="@+id/nomquiz3"
+                    app:layout_constraintTop_toTopOf="@+id/nomquiz3"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="les réponses fausse"
+                    android:textColor="@color/read"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/nomquiz3"
+                    app:layout_constraintStart_toStartOf="@+id/nomquiz3"
+                    app:layout_constraintTop_toTopOf="@+id/nomquiz3"
+                    app:layout_constraintVertical_bias="0.843"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="21dp"
+                    android:layout_marginStart="52dp"
+                    android:layout_marginTop="84dp"
+                    android:text="6"
+                    app:layout_constraintStart_toEndOf="@+id/textView12"
+                    app:layout_constraintTop_toTopOf="@+id/nomquiz3" />
+
+                <TextView
+                    android:id="@+id/textView17"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="51dp"
+                    android:layout_marginTop="52dp"
+                    android:text="3"
+                    app:layout_constraintStart_toEndOf="@+id/textView12"
+                    app:layout_constraintTop_toTopOf="@+id/nomquiz3" />
+
+                <Button
+                    android:id="@+id/start2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginEnd="32dp"
+                    android:background="@drawable/btn_gradient_style"
+                    android:text="Valider"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/nomquiz3" />
 
                 <!--<com.github.mikephil.charting.charts.PieChart-->
                     <!--android:id="@+id/piechart"-->
