@@ -72,6 +72,17 @@ public interface API {
     @POST("UserQuiz.php")
     Call<RSResponse> addUserQuiz(@Body UserQuiz userQuiz);
 
+    @Multipart
+    @POST("UserSelfi.php")
+    Call<RSResponse> userSelfi(
+            @Part MultipartBody.Part part,
+            @Part("id_user") RequestBody id_user,
+            @Part("date_jouer") RequestBody date_jouer
+    );
+
+    @GET("GetScore.php")
+    Call<RSResponse> getScore(@Query("id_user") int id_user);
+
     //Quiz
     @FormUrlEncoded
     @POST("GetDaysQuiz.php")

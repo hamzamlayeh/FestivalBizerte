@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="10dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/imageArtiste"
         android:layout_width="274dp"
         android:layout_height="245dp"
-        android:layout_marginStart="5dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,7 +21,7 @@
 
     <View
         android:id="@+id/view3"
-        android:layout_width="269dp"
+        android:layout_width="0dp"
         android:layout_height="89dp"
         android:background="#99000000"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -65,6 +64,16 @@
         app:layout_constraintTop_toTopOf="@+id/view3" />
 
     <TextView
+        android:id="@+id/heurpassage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="8dp"
+        android:text="20:20"
+        android:textColor="@color/card_bg_color"
+        app:layout_constraintEnd_toEndOf="@+id/view3"
+        app:layout_constraintTop_toTopOf="@+id/view3" />
+    <TextView
         android:id="@+id/idart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -79,4 +88,6 @@
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
 </android.support.constraint.ConstraintLayout>

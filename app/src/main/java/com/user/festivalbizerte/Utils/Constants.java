@@ -9,8 +9,12 @@ public class Constants {
     public static final int REQUEST_GALLERY_PHOTO = 200;
     public static final int REQUEST_PERMISSION_STORAGE = 300;
     public static final int REQUEST_PERMISSION_CAMERA = 400;
+    public static final int REQUEST_LOCATION = 400;
 
     public static final int MAX_PHOTO_PRODUITS= 5;
+
+    public static final double LATITUDE=37.273999;
+    public static final double LONGITUDE=9.859243;
 
     // Activity
     public static final String LODING= "Loding";

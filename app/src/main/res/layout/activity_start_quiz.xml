@@ -78,7 +78,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:gravity="center"
-                        android:text="Quiz festival Bizerte"
+                        android:text="@string/quiz_festival_bizerte"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="24sp"
@@ -94,7 +94,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="28dp"
                         android:gravity="center"
-                        android:text="Bienvenu "
+                        android:text="@string/bienvenue"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="24sp"
@@ -104,58 +104,57 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/imageView8" />
 
-                    <TextView
-                        android:id="@+id/nomquiz4"
+                    <LinearLayout
+                        android:id="@+id/linear"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="32dp"
-                        android:layout_marginTop="28dp"
-                        android:layout_marginEnd="32dp"
+                        android:layout_marginStart="40dp"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginEnd="40dp"
                         android:background="@drawable/bg_dialog_ask_login"
-                        android:gravity="center"
-                        android:paddingLeft="20dp"
-                        android:paddingTop="10dp"
-                        android:paddingEnd="20dp"
-                        android:paddingRight="20dp"
-                        android:paddingBottom="40dp"
-                        android:text="Votre Score"
-                        android:textAlignment="center"
-                        android:textColor="@color/title_text_color"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
+                        android:orientation="vertical"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/nomquiz" />
+                        app:layout_constraintTop_toBottomOf="@+id/nomquiz">
 
-                    <TextView
-                        android:id="@+id/textView10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2350"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/nomquiz4"
-                        app:layout_constraintEnd_toEndOf="@+id/nomquiz4"
-                        app:layout_constraintHorizontal_bias="0.498"
-                        app:layout_constraintStart_toStartOf="@+id/nomquiz4"
-                        app:layout_constraintTop_toTopOf="@+id/nomquiz4"
-                        app:layout_constraintVertical_bias="0.69" />
+                        <TextView
+                            android:id="@+id/nomquiz4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="15dp"
+                            android:padding="10dp"
+                            android:text="Votre Score de jour"
+                            android:textAlignment="center"
+                            android:textColor="@color/title_text_color"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView10"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"
+                            android:text="2350"
+                            android:textColor="@color/black"
+                            android:textSize="18sp" />
+                    </LinearLayout>
 
                     <Button
                         android:id="@+id/start"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
-                        android:layout_marginTop="52dp"
+                        android:layout_marginTop="32dp"
                         android:layout_marginEnd="32dp"
                         android:background="@drawable/btn_gradient_style"
-                        android:text="Start"
+                        android:text="@string/commencer"
                         android:textColor="@color/white"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/nomquiz4" />
+                        app:layout_constraintTop_toBottomOf="@+id/linear" />
 
                     <ImageView
                         android:id="@+id/imageView8"

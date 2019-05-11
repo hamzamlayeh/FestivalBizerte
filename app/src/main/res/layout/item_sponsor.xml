@@ -24,7 +24,7 @@
             android:background="@color/colorPrimary"
             android:paddingBottom="10dp">
 
-            <ImageView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/logo"
                 android:layout_width="0dp"
                 android:layout_height="185dp"
@@ -33,7 +33,6 @@
                 android:layout_marginBottom="8dp"
                 android:foregroundGravity="center"
                 android:scaleType="fitXY"
-                android:src="@drawable/testjpg"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

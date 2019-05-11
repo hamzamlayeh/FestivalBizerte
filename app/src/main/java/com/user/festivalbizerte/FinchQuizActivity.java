@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -40,6 +41,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
@@ -55,6 +57,12 @@ public class FinchQuizActivity extends AppCompatActivity implements NavigationVi
     Toolbar toolbar;
     @BindView(R.id.navigation)
     NavigationView navigationView;
+    @BindView(R.id.score)
+    TextView txt_score;
+    @BindView(R.id.textView17)
+    TextView txt_qtVrai;
+    @BindView(R.id.textView16)
+    TextView txt_qtFaux;
     ActionBarDrawerToggle actionBarDrawerToggle;
     Context context;
 //    @BindView(R.id.piechart)
@@ -84,18 +92,20 @@ public class FinchQuizActivity extends AppCompatActivity implements NavigationVi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         loadHeaderView(RSSession.getLocalStorage(context));
-        //
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             UserQuiz userQuiz = new Gson().fromJson(extras.getString("userQuiz"), UserQuiz.class);
             addUserQuiz(userQuiz);
-            int Nb_question = extras.getInt("Nbquestion");
             int Nb_questionVrai = extras.getInt("questionCorrect");
             int Nb_questionFalse = extras.getInt("questionfalse");
+            txt_score.setText(String.valueOf(userQuiz.getScore_jour()));
+            txt_qtVrai.setText(String.valueOf(Nb_questionVrai));
+            txt_qtFaux.setText(String.valueOf(Nb_questionFalse));
 //            pieEntries.add(new PieEntry(Nb_questionVrai, "correct"));
 //            pieEntries.add(new PieEntry(Nb_questionFalse, "worng"));
-            Toast.makeText(context, "score:" + userQuiz.getScore_jour() + " /nbqt:" + Nb_question + " /nbqtv:" +
-                    Nb_questionVrai + " /nbqtf:" + Nb_questionFalse, Toast.LENGTH_SHORT).show();
+            Log.i("afichage", "score:" + userQuiz.getScore_jour() + " /nbqtv:" +
+                    Nb_questionVrai + " /nbqtf:" + Nb_questionFalse);
         }
 //        pieChart.getDescription().setEnabled(false);
 //        pieChart.setRotationEnabled(true);
@@ -128,9 +138,11 @@ public class FinchQuizActivity extends AppCompatActivity implements NavigationVi
                 public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
                     if (response.body() != null) {
                         if (response.body().getStatus() == 1) {
-                            Toast.makeText(getApplicationContext(), "Insert", Toast.LENGTH_SHORT).show();
+                            Log.i("ok", "insertt");
+//                            Toast.makeText(getApplicationContext(), "Insert", Toast.LENGTH_SHORT).show();
                         } else if (response.body().getStatus() == 0) {
-                            Toast.makeText(getApplicationContext(), "errr ", Toast.LENGTH_SHORT).show();
+                            Log.i("ok", "no");
+//                            Toast.makeText(getApplicationContext(), "errr ", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -159,6 +171,11 @@ public class FinchQuizActivity extends AppCompatActivity implements NavigationVi
             imageProfile.getHierarchy().setRoundingParams(roundingParams);
             imageProfile.setImageURI(Urls.IMAGE_PROFIL + userInfos.getPhoto());
         }
+    }
+
+    @OnClick(R.id.valide)
+    public void Retour() {
+        startActivity(new Intent(context, JeuxActivity.class));
     }
 
     @Override
@@ -212,5 +229,13 @@ public class FinchQuizActivity extends AppCompatActivity implements NavigationVi
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            startActivity(new Intent(context, JeuxActivity.class));
+        }
+        return false;
     }
 }

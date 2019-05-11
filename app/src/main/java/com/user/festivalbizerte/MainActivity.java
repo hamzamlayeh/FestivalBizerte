@@ -4,10 +4,12 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,6 +25,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +46,7 @@ import com.user.festivalbizerte.Model.RSResponse;
 import com.user.festivalbizerte.Model.UserInfos;
 import com.user.festivalbizerte.Utils.Constants;
 import com.user.festivalbizerte.Utils.Helpers;
+import com.user.festivalbizerte.Utils.Loader;
 import com.user.festivalbizerte.WebService.Urls;
 import com.user.festivalbizerte.WebService.WebService;
 import com.user.festivalbizerte.session.RSSession;
@@ -82,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ArtistesAdapter newsAdapter;
     List<ArtisteProgramee> ListArtiste = new ArrayList<>();
     private GoogleMap mMap;
+    DialogFragment Loding = Loader.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,12 +152,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void GetArtistes() {
+        Loding.show(getSupportFragmentManager(), Constants.LODING);
         Call<RSResponse> callUpload = WebService.getInstance().getApi().loadArtisteProgramee();
         callUpload.enqueue(new Callback<RSResponse>() {
             @Override
             public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
                 if (response.body() != null) {
                     if (response.body().getStatus() == 1) {
+                        Loding.dismiss();
                         ArtisteProgramee[] tab = new Gson().fromJson(new Gson().toJson(response.body().getData()), ArtisteProgramee[].class);
                         ListArtiste = Arrays.asList(tab);
                         newsAdapter = new ArtistesAdapter(context, ListArtiste);
@@ -160,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         NewsRecyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext(),
                                 LinearLayoutManager.HORIZONTAL, false));
                     } else if (response.body().getStatus() == 0) {
+                        Loding.dismiss();
                         Toast.makeText(getApplicationContext(), "Pas de Programe", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -167,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onFailure(Call<RSResponse> call, Throwable t) {
+                Loding.dismiss();
                 Log.d("err", t.getMessage());
             }
         });
@@ -264,6 +273,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         float zoomLevel = 14.0f; //This goes up to 21
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, zoomLevel));
+    }
+
+    @OnClick(R.id.button3)
+    public void GoTravelTodo() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.traveltodo.com/"));
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.button4)
+    public void GoTunisBoking() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://tn.tunisiebooking.com/"));
+        startActivity(intent);
     }
 
     @OnClick(R.id.webview)

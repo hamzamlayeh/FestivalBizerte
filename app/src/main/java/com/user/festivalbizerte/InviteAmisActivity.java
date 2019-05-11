@@ -1,17 +1,21 @@
 package com.user.festivalbizerte;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,6 +27,7 @@ import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -37,9 +42,13 @@ import com.user.festivalbizerte.Adapter.ContactTelAdapter;
 import com.user.festivalbizerte.Helper.RecyclerViewClickListener;
 import com.user.festivalbizerte.Helper.RecyclerViewTouchListener;
 import com.user.festivalbizerte.Model.ContactTelItem;
+import com.user.festivalbizerte.Model.RSResponse;
 import com.user.festivalbizerte.Model.UserInfos;
 import com.user.festivalbizerte.Utils.Constants;
+import com.user.festivalbizerte.Utils.Helpers;
+import com.user.festivalbizerte.Utils.Loader;
 import com.user.festivalbizerte.WebService.Urls;
+import com.user.festivalbizerte.WebService.WebService;
 import com.user.festivalbizerte.session.RSSession;
 
 import java.util.ArrayList;
@@ -53,6 +62,9 @@ import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class InviteAmisActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -71,6 +83,7 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
     List<ContactTelItem> ListRepertoire = new ArrayList<>();
     CharSequence search = "";
     Context context;
+    DialogFragment Loding = Loader.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,14 +124,15 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
 
                 String nom = ListRepertoire.get(position).getName();
                 String num = ListRepertoire.get(position).getDesc();
-                String msg = "Lien de l aplication";
+                String msg = "Lien de l'aplication";
                 try {
                     SmsManager sms = SmsManager.getDefault();
-//                    sms.sendTextMessage(num, null, msg, null, null);
+                    sms.sendTextMessage(num, null, msg, null, null);
                 } catch (Exception e) {
                     Toast.makeText(InviteAmisActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(InviteAmisActivity.this, "Invitation  envoiye par SMS a :" + nom + " \nNuméro :" + num, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(InviteAmisActivity.this, "Invitation  envoiye par SMS a :" + nom + " \nNuméro :" + num, Toast.LENGTH_SHORT).show();
+                addScoreFinal(RSSession.getIdUser(context), 100);
             }
 
 
@@ -140,6 +154,7 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
 
                 newsAdapter.getFilter().filter(s);
                 search = s;
+//                newsAdapter.notifyDataSetChanged();
 
             }
 
@@ -148,6 +163,46 @@ public class InviteAmisActivity extends AppCompatActivity implements NavigationV
 
             }
         });
+    }
+
+    private void addScoreFinal(int id_user, int score) {
+        if (Helpers.isConnected(context)) {
+            Loding.show(getSupportFragmentManager(), Constants.LODING);
+            Call<RSResponse> callUpload = WebService.getInstance().getApi().updateScore(id_user, score);
+            callUpload.enqueue(new Callback<RSResponse>() {
+                @Override
+                public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
+                    if (response.body() != null) {
+                        if (response.body().getStatus() == 1) {
+                            Loding.dismiss();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setMessage("Vous avez gagner 100 pt")
+                                    .setCancelable(false)
+                                    .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                                        public void onClick(final DialogInterface dialog, final int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                            alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#1CA8E4"));
+                            alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#1CA8E4"));
+                        } else if (response.body().getStatus() == 0) {
+                            Loding.dismiss();
+                            Toast.makeText(getApplicationContext(), "errr ", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<RSResponse> call, Throwable t) {
+                    Loding.dismiss();
+                    Log.d("err", t.getMessage());
+                }
+            });
+        } else {
+            Helpers.ShowMessageConnection(context);
+        }
     }
 
     private void loadHeaderView(UserInfos userInfos) {

@@ -121,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="48dp"
-                    android:text="les réponses vrai"
+                    android:text="@string/les_r_ponses_vrai"
                     android:textColor="@color/grin"
                     android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="@+id/nomquiz3"
@@ -133,7 +133,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="les réponses fausse"
+                    android:text="@string/les_r_ponses_fausse"
                     android:textColor="@color/read"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="@+id/nomquiz3"
@@ -148,7 +148,6 @@
                     android:layout_height="21dp"
                     android:layout_marginStart="52dp"
                     android:layout_marginTop="84dp"
-                    android:text="6"
                     app:layout_constraintStart_toEndOf="@+id/textView12"
                     app:layout_constraintTop_toTopOf="@+id/nomquiz3" />
 
@@ -158,19 +157,18 @@
                     android:layout_height="24dp"
                     android:layout_marginStart="51dp"
                     android:layout_marginTop="52dp"
-                    android:text="3"
                     app:layout_constraintStart_toEndOf="@+id/textView12"
                     app:layout_constraintTop_toTopOf="@+id/nomquiz3" />
 
                 <Button
-                    android:id="@+id/start2"
+                    android:id="@+id/valide"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="40dp"
                     android:layout_marginEnd="32dp"
                     android:background="@drawable/btn_gradient_style"
-                    android:text="Valider"
+                    android:text="@string/valider"
                     android:textColor="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"

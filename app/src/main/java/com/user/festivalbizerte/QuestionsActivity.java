@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -19,7 +21,9 @@ import com.user.festivalbizerte.Model.QuestionReponse;
 import com.user.festivalbizerte.Model.RSResponse;
 import com.user.festivalbizerte.Model.Reponses;
 import com.user.festivalbizerte.Model.UserQuiz;
+import com.user.festivalbizerte.Utils.Constants;
 import com.user.festivalbizerte.Utils.Helpers;
+import com.user.festivalbizerte.Utils.Loader;
 import com.user.festivalbizerte.WebService.WebService;
 import com.user.festivalbizerte.session.RSSession;
 
@@ -61,8 +65,9 @@ public class QuestionsActivity extends AppCompatActivity {
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
     Context context;
-    int Id_Quiz, mScore = 0, mQuestionNumber = 0, mReponseNumber = 0,correctQuestion=0,worngQuestion=0;
+    int Id_Quiz, mScore = 0, mQuestionNumber = 0, mReponseNumber = 0, correctQuestion = 0, worngQuestion = 0;
     List<QuestionReponse> listQuestion = new ArrayList<>();
+    DialogFragment Loding = Loader.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,17 +92,20 @@ public class QuestionsActivity extends AppCompatActivity {
 
     private void loadQuestions(int id_quiz) {
         if (Helpers.isConnected(context)) {
+            Loding.show(getSupportFragmentManager(), Constants.LODING);
             Call<RSResponse> callUpload = WebService.getInstance().getApi().loadQuestion(id_quiz);
             callUpload.enqueue(new Callback<RSResponse>() {
                 @Override
                 public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
                     if (response.body() != null) {
                         if (response.body().getStatus() == 1) {
+                            Loding.dismiss();
                             QuestionReponse[] tab = new Gson().fromJson(new Gson().toJson(response.body().getData()), QuestionReponse[].class);
                             listQuestion = Arrays.asList(tab);
                             progressBar.setMax(listQuestion.size());
                             updateQuestion();
                         } else if (response.body().getStatus() == 0) {
+                            Loding.dismiss();
                             Toast.makeText(getApplicationContext(), "Pas de Quiz pour le moument ", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -105,6 +113,7 @@ public class QuestionsActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<RSResponse> call, Throwable t) {
+                    Loding.dismiss();
                     Log.d("err", t.getMessage());
                     Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -124,12 +133,12 @@ public class QuestionsActivity extends AppCompatActivity {
             updateQuestion();
             correctQuestion++;
             //This line of code is optiona
-            Toast.makeText(getApplicationContext(), "correct/" + mScore, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "correct/" + mScore, Toast.LENGTH_SHORT).show();
 
         } else {
             worngQuestion++;
-            Toast.makeText(getApplicationContext(), "wrong/", Toast.LENGTH_SHORT).show();
             updateQuestion();
+//            Toast.makeText(getApplicationContext(), "wrong/", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -142,12 +151,12 @@ public class QuestionsActivity extends AppCompatActivity {
             updateQuestion();
             correctQuestion++;
             //This line of code is optiona
-            Toast.makeText(getApplicationContext(), "correct/" + mScore, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "correct/" + mScore, Toast.LENGTH_SHORT).show();
 
         } else {
             worngQuestion++;
-            Toast.makeText(getApplicationContext(), "wrong/", Toast.LENGTH_SHORT).show();
             updateQuestion();
+//            Toast.makeText(getApplicationContext(), "wrong/", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -161,12 +170,12 @@ public class QuestionsActivity extends AppCompatActivity {
             updateQuestion();
             correctQuestion++;
             //This line of code is optiona
-            Toast.makeText(getApplicationContext(), "correct/" + mScore, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "correct/" + mScore, Toast.LENGTH_SHORT).show();
 
         } else {
             worngQuestion++;
-            Toast.makeText(getApplicationContext(), "wrong/", Toast.LENGTH_SHORT).show();
             updateQuestion();
+//            Toast.makeText(getApplicationContext(), "wrong/", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -205,20 +214,26 @@ public class QuestionsActivity extends AppCompatActivity {
     private void updateQuestion() {
 //        Log.i("num", mQuestionNumber + "");
         if (mQuestionNumber < listQuestion.size()) {
-            mQuestionView.setText(listQuestion.get(mQuestionNumber).getBody());
-            //Reponse1
-            mButtonChoice1.setText(listQuestion.get(mQuestionNumber).getListeRep().get(0).getBody());
-            mChoice1Valide.setText(String.valueOf(listQuestion.get(mQuestionNumber).getListeRep().get(0).getIs_valide()));
-            //Reponse2
-            mButtonChoice2.setText(listQuestion.get(mQuestionNumber).getListeRep().get(1).getBody());
-            mChoice2Valide.setText(String.valueOf(listQuestion.get(mQuestionNumber).getListeRep().get(1).getIs_valide()));
-            //Reponse3
-            mButtonChoice3.setText(listQuestion.get(mQuestionNumber).getListeRep().get(2).getBody());
-            mChoice3Valide.setText(String.valueOf(listQuestion.get(mQuestionNumber).getListeRep().get(2).getIs_valide()));
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mQuestionView.setText(listQuestion.get(mQuestionNumber).getBody());
+                    //Reponse1
+                    mButtonChoice1.setText(listQuestion.get(mQuestionNumber).getListeRep().get(0).getBody());
+                    mChoice1Valide.setText(String.valueOf(listQuestion.get(mQuestionNumber).getListeRep().get(0).getIs_valide()));
+                    //Reponse2
+                    mButtonChoice2.setText(listQuestion.get(mQuestionNumber).getListeRep().get(1).getBody());
+                    mChoice2Valide.setText(String.valueOf(listQuestion.get(mQuestionNumber).getListeRep().get(1).getIs_valide()));
+                    //Reponse3
+                    mButtonChoice3.setText(listQuestion.get(mQuestionNumber).getListeRep().get(2).getBody());
+                    mChoice3Valide.setText(String.valueOf(listQuestion.get(mQuestionNumber).getListeRep().get(2).getIs_valide()));
 
-            mQuestionNumber++;
-            mNbQuestionView.setText(String.format("%s/%s", String.valueOf(mQuestionNumber), String.valueOf(listQuestion.size())));
-            progressBar.setProgress(mQuestionNumber);
+                    mQuestionNumber++;
+                    mNbQuestionView.setText(String.format("%s/%s", String.valueOf(mQuestionNumber), String.valueOf(listQuestion.size())));
+                    progressBar.setProgress(mQuestionNumber);
+                }
+            }, 500);
+
 
         } else {
             Toast.makeText(context, mScore + "", Toast.LENGTH_SHORT).show();
@@ -233,7 +248,6 @@ public class QuestionsActivity extends AppCompatActivity {
                     UserQuiz userQuiz = new UserQuiz(RSSession.getIdUser(context), mScore, dateformat.format(c.getTime()));
                     Intent intent = new Intent(context, FinchQuizActivity.class);
                     intent.putExtra("userQuiz", new Gson().toJson(userQuiz));
-                    intent.putExtra("Nbquestion", listQuestion.size());
                     intent.putExtra("questionCorrect", correctQuestion);
                     intent.putExtra("questionfalse", worngQuestion);
                     startActivity(intent);
@@ -241,10 +255,6 @@ public class QuestionsActivity extends AppCompatActivity {
             }, 400);
 
         }
-    }
-
-    private void updateScore(int point) {
-        //mScoreView.setText(String.format("%s", String.valueOf(point)));
     }
 
     public int TrouverIndice(List<Reponses> list) {
@@ -259,5 +269,13 @@ public class QuestionsActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            startActivity(new Intent(context, JeuxActivity.class));
+        }
+        return false;
     }
 }

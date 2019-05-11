@@ -105,9 +105,30 @@ public class ProfileActivity extends AppCompatActivity {
                 .build());
 
         setUser(RSSession.getLocalStorage(context), Constants.PROFIL);
+        GetScoreFinal();
 
     }
+    private void GetScoreFinal() {
+        Call<RSResponse> callUpload = WebService.getInstance().getApi().getScore(RSSession.getIdUser(context));
+        callUpload.enqueue(new Callback<RSResponse>() {
+            @Override
+            public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
+                if (response.body() != null) {
+                    if (response.body().getStatus() == 1) {
+                        UserInfos tab = new Gson().fromJson(new Gson().toJson(response.body().getData()), UserInfos.class);
+                        Score.setText(String.valueOf(tab.getScore_final()));
+                    } else if (response.body().getStatus() == 0) {
+                        Toast.makeText(getApplicationContext(), "errr", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
 
+            @Override
+            public void onFailure(Call<RSResponse> call, Throwable t) {
+                Log.d("err", t.getMessage());
+            }
+        });
+    }
     private void setUser(UserInfos userInfos, String TAG) {
         if (userInfos != null) {
             switch (TAG) {
@@ -115,7 +136,7 @@ public class ProfileActivity extends AppCompatActivity {
                     NomPrenom.setText(String.format("%s %s", userInfos.getNom(), userInfos.getPrenom()));
                     Email.setText(userInfos.getEmail());
                     Tel.setText(userInfos.getTel());
-                    Score.setText(String.valueOf(userInfos.getScore_final()));
+//                    Score.setText(String.valueOf(userInfos.getScore_final()));
                     if (userInfos.getPhoto() != null) {
                         RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
                         roundingParams.setBorder(getResources().getColor(R.color.white), 4f);

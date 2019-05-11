@@ -3,11 +3,14 @@ package com.user.festivalbizerte;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
-import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.NavigationView;
@@ -16,14 +19,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,11 +35,13 @@ import android.widget.Toast;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.user.festivalbizerte.Model.Quiz;
 import com.user.festivalbizerte.Model.RSResponse;
 import com.user.festivalbizerte.Model.UserInfos;
 import com.user.festivalbizerte.Utils.Constants;
 import com.user.festivalbizerte.Utils.Helpers;
+import com.user.festivalbizerte.Utils.Loader;
 import com.user.festivalbizerte.WebService.Urls;
 import com.user.festivalbizerte.WebService.WebService;
 import com.user.festivalbizerte.session.RSSession;
@@ -62,9 +68,12 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
     Toolbar toolbar;
     @BindView(R.id.navigation)
     NavigationView navigationView;
+    @BindView(R.id.scorefinal)
+    TextView txt_score;
     ActionBarDrawerToggle actionBarDrawerToggle;
     View DialogBottomView = null, popupInfoDialogView = null;
     AlertDialog alertDialog;
+    LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +91,7 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
                                 .setFontAttrId(R.attr.fontPath)
                                 .build()))
                 .build());
+         //ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_LOCATION);
         setSupportActionBar(toolbar);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -89,6 +99,29 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         loadHeaderView(RSSession.getLocalStorage(context));
+        GetScoreFinal();
+    }
+
+    private void GetScoreFinal() {
+        Call<RSResponse> callUpload = WebService.getInstance().getApi().getScore(RSSession.getIdUser(context));
+        callUpload.enqueue(new Callback<RSResponse>() {
+            @Override
+            public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
+                if (response.body() != null) {
+                    if (response.body().getStatus() == 1) {
+                        UserInfos tab = new Gson().fromJson(new Gson().toJson(response.body().getData()), UserInfos.class);
+                        txt_score.setText(String.valueOf(tab.getScore_final()));
+                    } else if (response.body().getStatus() == 0) {
+                        Toast.makeText(getApplicationContext(), "errr", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RSResponse> call, Throwable t) {
+                Log.d("err", t.getMessage());
+            }
+        });
     }
 
     private void loadHeaderView(UserInfos userInfos) {
@@ -179,37 +212,106 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
     @OnClick(R.id.cardeview)
     public void Selfi() {
         BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(context);
-        initPopupViewControls();
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        DialogBottomView = layoutInflater.inflate(R.layout.bottom_dialog, null);
         mBottomSheetDialog.setContentView(DialogBottomView);
         mBottomSheetDialog.show();
     }
 
-    private void initPopupViewControls() {
-        LayoutInflater layoutInflater = LayoutInflater.from(context);
-        DialogBottomView = layoutInflater.inflate(R.layout.bottom_dialog, null);
-
-        LinearLayout layout_take_pic = DialogBottomView.findViewById(R.id.layout_take_pic);
-        LinearLayout layout_choose_pic = DialogBottomView.findViewById(R.id.layout_choose_pic);
-    }
-
     @OnClick(R.id.cardeview2)
     public void GoQuiz() {
-//        float[] results = new float[1];
-//        Location.distanceBetween(36.797793, 10.159025, 36.797887, 10.156614, results);
-//        float distanceInMeters = results[0];
-//        boolean isWithin10km = distanceInMeters < 200;
-//        Log.d("mm",distanceInMeters+"//"+isWithin10km);
+        if (Helpers.isConnected(context)) {
+            //PlayQuiz();
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                buildAlertMessageNoGps();
+
+            } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                getLocation();
+            }
+        } else {
+            Helpers.ShowMessageConnection(context);
+        }
+    }
+
+    private void getLocation() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M  && context.checkSelfPermission(
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED&&
+                context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION},Constants.REQUEST_LOCATION);
+        } else {
+            //   gps functions.
+//        }
+//        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+//                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+//                (context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//
+//            ActivityCompat.requestPermissions(JeuxActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_LOCATION);
+//
+//        } else {
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            Location location1 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Location location2 = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+            if (location != null) {
+                double latti = location.getLatitude();
+                double longi = location.getLongitude();
+                float[] results = new float[1];
+                Location.distanceBetween(Constants.LATITUDE, Constants.LONGITUDE, latti, longi, results);
+                float distanceInMeters = results[0];
+                boolean isWithin1km = distanceInMeters < 200;
+                if (isWithin1km) {
+                    PlayQuiz();
+                } else {
+                    PlayQuiz();
+                }
+                Log.d("mm1", distanceInMeters + "//" + isWithin1km);
+
+            } else if (location1 != null) {
+                double latti = location1.getLatitude();
+                double longi = location1.getLongitude();
+                float[] results = new float[1];
+                Location.distanceBetween(Constants.LATITUDE, Constants.LONGITUDE, latti, longi, results);
+                float distanceInMeters = results[0];
+                boolean isWithin1km = distanceInMeters < 200;
+                if (isWithin1km) {
+                    PlayQuiz();
+                } else {
+                    PlayQuiz();
+                }
+                Log.d("mm2", distanceInMeters + "//" + isWithin1km);
+                Log.d("lati/logi", latti + "//" + longi);
+
+            } else if (location2 != null) {
+                double latti = location2.getLatitude();
+                double longi = location2.getLongitude();
+                float[] results = new float[1];
+                Location.distanceBetween(Constants.LATITUDE, Constants.LONGITUDE, latti, longi, results);
+                float distanceInMeters = results[0];
+                boolean isWithin1km = distanceInMeters < 200;
+                if (isWithin1km) {
+                    PlayQuiz();
+                } else {
+                    PlayQuiz();
+                }
+                Log.d("mm3", distanceInMeters + "//" + isWithin1km);
+            } else {
+                PlayQuiz();
+                Log.i("mm4","no");
+//                Toast.makeText(this, "Unble to Trace your location", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void PlayQuiz() {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat timeormat = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat timeormat = new SimpleDateFormat("HH:mm");
         String date = dateformat.format(c.getTime());
         String time = timeormat.format(c.getTime());
-//        System.out.println(date);
-//        System.out.println(time);
-//        Intent intent = new Intent(context, QuestionsActivity.class);
-//        intent.putExtra("Id_quiz",1);
-//        startActivity(intent);
-        Call<RSResponse> callUpload = WebService.getInstance().getApi().getQuiz("2019-05-03", "22:06");
+        Log.i("date", date);
+        Log.i("time", time);
+        Call<RSResponse> callUpload = WebService.getInstance().getApi().getQuiz(date, time);
         callUpload.enqueue(new Callback<RSResponse>() {
             @Override
             public void onResponse(Call<RSResponse> call, Response<RSResponse> response) {
@@ -231,6 +333,26 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
                 Log.d("err", t.getMessage());
             }
         });
+    }
+
+    protected void buildAlertMessageNoGps() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.active_gps))
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#1CA8E4"));
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#1CA8E4"));
     }
 
     public void Camera(View view) {
@@ -288,10 +410,22 @@ public class JeuxActivity extends AppCompatActivity implements NavigationView.On
                 intent.putExtra("Methode", Constants.GALLERY);
                 startActivity(intent);
             }
+        } else if (requestCode == Constants.REQUEST_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                ;
+            }
         }
     }
 
     public void cancelDialog(View view) {
         alertDialog.dismiss();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            startActivity(new Intent(context, MainActivity.class));
+        }
+        return false;
     }
 }

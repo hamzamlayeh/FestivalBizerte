@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -149,6 +150,14 @@ public class StartQuiz extends AppCompatActivity implements NavigationView.OnNav
                 startActivity(new Intent(context, LoginActivity.class));
                 finishAffinity();
                 break;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            startActivity(new Intent(context, JeuxActivity.class));
         }
         return false;
     }

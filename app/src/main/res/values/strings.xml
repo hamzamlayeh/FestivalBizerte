@@ -41,4 +41,15 @@
     <string name="bien_jou">Bien Joué</string>
     <string name="camera">Camera</string>
     <string name="s_inscrire">S\'inscrire</string>
+    <string name="les_r_ponses_vrai">les réponses vrai</string>
+    <string name="les_r_ponses_fausse">les réponses fausse</string>
+    <string name="quiz_festival_bizerte">Quiz festival Bizerte</string>
+    <string name="tunisie_booking">Tunisie Booking</string>
+    <string name="traveltodo">Travel Todo</string>
+    <string name="apropo">Le Festival International de Bizerte est né en 1974. Les spectacles se déroulaient dans l\'enceinte du Fort d\'Espagne dont la capacité d\'accueil ne dépassait pas 3000 personnes. En 2001, l\'amphitéâtre Khémaies Tarnane a été inauguré pour héberger les manifestations plus ambitieuses du Festival, lui permettant d\'accueillir un public qui peut aller jusqu\'à dix mille personnes.</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="active_gps">S\'il vous plaît activer votre connexion GPS</string>
+    <string name="photo_avec_succees">Votre Photo a été envoyé avec succès</string>
+    <string name="commencer">Commencer</string>
 </resources>

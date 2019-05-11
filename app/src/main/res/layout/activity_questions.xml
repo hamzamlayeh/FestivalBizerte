@@ -42,7 +42,6 @@
         android:layout_marginEnd="12dp"
         android:drawableStart="@drawable/ic_question"
         android:drawablePadding="5dp"
-        android:text="0/5"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -82,7 +81,6 @@
                 android:background="#2D3457"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="Which thing is alive?"
                 android:textColor="@color/white"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -101,7 +99,6 @@
                     android:background="#2D3457"
                     android:gravity="center"
                     android:textSize="16sp"
-                    android:text="reponse 1"
                     android:textAllCaps="false"
                     android:textColor="#fff" />
 
@@ -132,7 +129,6 @@
                     android:padding="8dp"
                     android:gravity="center"
                     android:textSize="16sp"
-                    android:text="reponse 2"
                     android:textAllCaps="false"
                     android:textColor="#fff" />
 
@@ -162,7 +158,6 @@
                     android:padding="8dp"
                     android:gravity="center"
                     android:textSize="16sp"
-                    android:text="reponse 3"
                     android:textAllCaps="false"
                     android:textColor="#fff" />
 

@@ -49,7 +49,7 @@ public class ArtisteAdapter extends RecyclerView.Adapter<ArtisteAdapter.NewsView
     @Override
     public void onBindViewHolder(@NonNull NewsViewHolder newsViewHolder, int position) {
 
-        newsViewHolder.NomArtiste.setText(List.get(position).getNom());
+        newsViewHolder.NomArtiste.setText(String.format("%s %s", List.get(position).getNom(), List.get(position).getPrenom()));
         newsViewHolder.Id.setText(String.valueOf(List.get(position).getId_art()));
         newsViewHolder.imageArtiste.setImageURI(Urls.IMAGE_ARTISTE + List.get(position).getPhoto());
     }

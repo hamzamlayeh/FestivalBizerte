@@ -3,6 +3,7 @@ package com.user.festivalbizerte.Adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +26,8 @@ public class SponsorAdapter extends RecyclerView.Adapter<SponsorAdapter.NewsView
 
     class NewsViewHolder extends RecyclerView.ViewHolder {
         TextView NomSP, Id,Description,Site;
-        ImageView Logo;
-//        SimpleDraweeView Logo;
+        //ImageView Logo;
+        SimpleDraweeView Logo;
 
         NewsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -34,7 +35,7 @@ public class SponsorAdapter extends RecyclerView.Adapter<SponsorAdapter.NewsView
             Description = itemView.findViewById(R.id.description);
             Site = itemView.findViewById(R.id.site);
             Id = itemView.findViewById(R.id.Id);
-//            Logo = itemView.findViewById(R.id.imageArtiste);
+           Logo = itemView.findViewById(R.id.logo);
 
         }
     }
@@ -65,7 +66,7 @@ public class SponsorAdapter extends RecyclerView.Adapter<SponsorAdapter.NewsView
                 Toast.makeText(mContext, "site web", Toast.LENGTH_SHORT).show();
             }
         });
-        //newsViewHolder.Logo.setImageURI(Urls.IMAGE_SPONSOR + List.get(position).getLogo());
+        newsViewHolder.Logo.setImageURI(Urls.IMAGE_SPONSOR + List.get(position).getLogo());
     }
 
     @Override

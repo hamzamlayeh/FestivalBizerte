@@ -28,7 +28,7 @@ public class ArtistesAdapter extends RecyclerView.Adapter<ArtistesAdapter.NewsVi
 
     public class NewsViewHolder extends RecyclerView.ViewHolder {
 
-        TextView jourNum, Id_prog, Id_art, jourLet, NomArtiste;
+        TextView jourNum, Id_prog, Id_art, jourLet, NomArtiste,HeurPassage;
         SimpleDraweeView imageArtiste;
 
         public NewsViewHolder(@NonNull View itemView) {
@@ -36,6 +36,7 @@ public class ArtistesAdapter extends RecyclerView.Adapter<ArtistesAdapter.NewsVi
             jourNum = itemView.findViewById(R.id.jourNum);
             jourLet = itemView.findViewById(R.id.jourLet);
             NomArtiste = itemView.findViewById(R.id.NomArtiste);
+            HeurPassage = itemView.findViewById(R.id.heurpassage);
             Id_prog = itemView.findViewById(R.id.idprog);
             Id_art = itemView.findViewById(R.id.idart);
             imageArtiste = itemView.findViewById(R.id.imageArtiste);
@@ -58,7 +59,7 @@ public class ArtistesAdapter extends RecyclerView.Adapter<ArtistesAdapter.NewsVi
     @Override
     public void onBindViewHolder(@NonNull NewsViewHolder newsViewHolder, int position) {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         DateFormatSymbols symbols = new DateFormatSymbols(Locale.FRANCE);
         Calendar cal = Calendar.getInstance();
         try {
@@ -70,7 +71,8 @@ public class ArtistesAdapter extends RecyclerView.Adapter<ArtistesAdapter.NewsVi
             e.printStackTrace();
         }
         newsViewHolder.jourNum.setText(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
-        newsViewHolder.jourLet.setText(symbols.getWeekdays()[cal.get(Calendar.DAY_OF_WEEK)]);
+        newsViewHolder.jourLet.setText(symbols.getShortWeekdays()[cal.get(Calendar.DAY_OF_WEEK)]);
+        newsViewHolder.HeurPassage.setText(List.get(position).getHeurePassage());
         newsViewHolder.Id_prog.setText(String.valueOf(List.get(position).getId_prog()));
         newsViewHolder.Id_art.setText(String.valueOf(List.get(position).getArtiste().getId_art()));
         newsViewHolder.NomArtiste.setText(String.format("%s %s", List.get(position).getArtiste().getNom(), List.get(position).getArtiste().getPrenom()));
